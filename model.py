@@ -8,7 +8,21 @@ import time
 from copy import copy
 
 class PINN(nn.Module):
+    
     def __init__(self, neuron_num, layer_num, zero_shot=False):
+
+        """Initializes Physics-Informed Neural Networks.
+         Model architecture from Raissi et al. (2019)
+         The model is MLP, consisting of layer_num fully-connected layers
+         with neuron_num neurons per layer. Each output vector from a layer
+         is activated by tanh function.
+
+        Args:
+            neuron_num (int): the number of neurons in a single layer
+            layer_num (int): the number of layers
+            zero_shot (boolean): indicating zero-shot learning or not
+        """
+
         super(PINN, self).__init__()
 
         layers = []

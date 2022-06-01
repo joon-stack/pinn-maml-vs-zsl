@@ -69,4 +69,58 @@ def generate_data(i_size, b_size, f_size, zero_shot=False, alpha=None, beta=None
 
     return i_set, b_set, f_set
 
+def lhs(size, lb=-1, rb=1):
+    """Latin Hypercube Sampling
+
+       Args:
+            size (int): shape of the sampled vector
+            lb (float): left boundary
+            rb (float): right boundary
+
+       Returns:
+            ret (list): sampled vector
+    """
+    res = [] if size > 1 else 0
+    length = (rb - lb) / size
+    for i in range(size):
+        sub_lb = lb + length * i
+        val = np.random.rand() * length + sub_lb
+        if size > 1:
+            res.append(val)
+        else:
+            res = val
+    return res
+        
+def generate_task(size, ood=False):
+    """Generate PINN tasks. Sample alpha and beta of tasks (only support)
+
+       Args:
+            size (int): number of tasks
+            ood (boolean): whether out-of-distribution tasks be sampled or not 
+    
+       Returns:
+            tasks (list): tasks (support)
+    """
+    tasks = []
+    for _ in range(size):
+        # alpha_lb, alpha_rb = -1.0, 1.0
+        # beta_lb, beta_rb = -1.0, 1.0
+        if ood:
+            p = np.random.rand()
+            alpha_qry_lb, alpha_qry_rb = (-1.5, -1.0) if p < 0.5 else (1.0, 1.5)
+            p = np.random.rand()
+            beta_qry_lb, beta_qry_rb = (-1.5, -1.0) if p < 0.5 else (1.0, 1.5)
+        else:
+            alpha_qry_lb, alpha_qry_rb = -1.0, 1.0
+            beta_qry_lb, beta_qry_rb = -1.0, 1.0
+            
+        # alpha_sup = lhs(1, alpha_lb, alpha_rb)
+        # beta_sup = lhs(1, beta_lb, beta_rb)
+        alpha_qry = lhs(1, alpha_qry_lb, alpha_qry_rb)
+        beta_qry = lhs(1, beta_qry_lb, beta_qry_rb)
+        task = (alpha_qry, beta_qry)
+        tasks.append(task)
+    
+    return tasks
+
 

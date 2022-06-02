@@ -18,11 +18,7 @@ SAVE_INTERVAL = 1000
 class MAML:
     def __init__(self, num_inner_steps, inner_lr, outer_lr, num_data_b, num_data_f):
 
-        """Initializes First-Order Model-Agnostic Meta-Learning.
-        Model architecture from https://arxiv.org/abs/1703.03400
-        The model consists of four convolutional blocks followed by a linear
-        head layer. Each convolutional block comprises a convolution layer, a
-        batch normalization layer, and a ReLU activation.
+        """Initializes First-Order Model-Agnostic Meta-Learning to train Physics-Informed Neural Networks.
 
         Args:
             num_inner_steps (int): number of inner-loop optimization steps
@@ -125,10 +121,15 @@ class MAML:
 
         phi = model_phi.state_dict()
 
+        
+        nrmse = model_phi.validate(alpha, beta) if not train else None
+
         assert phi != None
         assert len(inner_loss) == self._num_inner_steps + 1
 
-        return phi, grad, inner_loss_b, inner_loss_f, inner_loss
+
+        return phi, grad, inner_loss_b, inner_loss_f, inner_loss, nrmse
+
 
     def _outer_loop(self, task_batch, train=None):
         """Computes the MAML loss and metrics on a batch of tasks.
@@ -149,26 +150,18 @@ class MAML:
         """
 
         theta = self.model.state_dict()
-
-        # outer_loss_b = []
-        # outer_loss_f = []
-        # outer_loss   = []
-        
-        optim = torch.optim.Adam(self.model.parameters(), lr=self._outer_lr)
+    
         inner_loss_b = []
         inner_loss_f = []
         inner_loss   = []
 
-        # grad_sum = [torch.zeros(w.shape) for w in list(self.model.parameters())]
-
-        loss_fn = torch.nn.MSELoss()
         model_outer = deepcopy(self.model)
         model_outer.load_state_dict(theta)
         model_outer.to(self.device)
 
         for task in task_batch:
             support = task
-            phi, grad, loss_sup_b, loss_sup_f, loss_sup = self._inner_loop(theta, support)
+            phi, grad, loss_sup_b, loss_sup_f, loss_sup, nrmse = self._inner_loop(theta, support, train)
             inner_loss_b.append(loss_sup_b[-1])
             inner_loss_f.append(loss_sup_f[-1])
             inner_loss.append(loss_sup[-1])
@@ -176,38 +169,16 @@ class MAML:
 
             grad_sum = grad
 
-            # if train:
-            #     grad_sum += grad
-            # alpha, beta = query
-            # query_data_b = make_training_boundary_data(self._num_data_b, alpha=alpha, beta=beta)
-            # query_data_f = make_training_domain_data(self._num_data_f, alpha=alpha, beta=beta)
-            # input_b, target_b = query_data_b
-            # input_f, target_f = query_data_f
-
-            # input_b = input_b.to(self.device)
-            # target_b = target_b.to(self.device)
-            # input_f = input_f.to(self.device)
-            # target_f = target_f.to(self.device)
-
-            # loss_b = loss_fn(model_outer(input_b), target_b)
-            # loss_f = model_outer.calc_loss_f(input_f, target_f, alpha, beta)
-            # loss = loss_b * 10 + loss_f
-
-           
-
-            # outer_loss += [loss.item()]
-            # outer_loss_b += [loss_b.item()]
-            # outer_loss_f += [loss_f.item()]
         if train:
             for g in grad_sum:
                 g /= len(task_batch)
             for w, g in zip(list(self.model.parameters()), grad_sum):
                 w.grad = g
-                # print(g)
             self._optimizer.step()
 
-        return inner_loss, inner_loss_b, inner_loss_f
-
+        return np.mean(inner_loss), np.mean(inner_loss_b), np.mean(inner_loss_f), nrmse
+    
+    
     def train(self, train_steps, num_train_tasks):
         """Train the MAML.
 
@@ -219,40 +190,36 @@ class MAML:
         print("Start MAML training at iteration {}".format(self._train_step))
 
         train_loss = {
-                        # 'outer_loss': [], 
-                        # 'outer_loss_b': [],
-                        # 'outer_loss_f': [],
+
                         'inner_loss': [],
                         'inner_loss_b': [],
                         'inner_loss_f': []
                      }
 
         val_loss = {
-                        # 'outer_loss': [], 
-                        # 'outer_loss_b': [],
-                        # 'outer_loss_f': [],
+
                         'inner_loss': [],
                         'inner_loss_b': [],
                         'inner_loss_f': []
-                     }
+                    }
 
         val_ood_loss = {
-                        # 'outer_loss': [], 
-                        # 'outer_loss_b': [],
-                        # 'outer_loss_f': [],
                         'inner_loss': [],
                         'inner_loss_b': [],
                         'inner_loss_f': []
-                     }
+                       }
+        
+        nrmse = {
+                    'nrmse_val': [],
+                    'nrmse_val_ood': []
+                }
 
         
         for i in range(1, train_steps + 1):
             self._train_step += 1
             train_task = generate_task(num_train_tasks)
-            inner_loss, inner_loss_b, inner_loss_f = self._outer_loop(train_task, train=True)
-            # train_loss['outer_loss'].append(outer_loss)
-            # train_loss['outer_loss_b'].append(outer_loss_b)
-            # train_loss['outer_loss_f'].append(outer_loss_f)
+            inner_loss, inner_loss_b, inner_loss_f, _ = self._outer_loop(train_task, train=True)
+
             train_loss['inner_loss'].append(inner_loss)
             train_loss['inner_loss_b'].append(inner_loss_b)
             train_loss['inner_loss_f'].append(inner_loss_f)
@@ -271,32 +238,30 @@ class MAML:
                 # in-distibution
                 # val_task = generate_task(1)
                 val_task = [(0.5, 0.5)]
-                inner_loss_val, inner_loss_val_b, inner_loss_val_f = self._outer_loop(val_task, train=False)
-                print("Validation ({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f}"
-                .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0][0], val_task[0][1], np.mean(inner_loss_val)))
+                inner_loss_val, inner_loss_val_b, inner_loss_val_f, nrmse_val = self._outer_loop(val_task, train=False)
+                print("Validation ({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+                .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0][0], val_task[0][1], np.mean(inner_loss_val), nrmse_val))
 
-                # val_loss['outer_loss'].append(outer_loss_val)
-                # val_loss['outer_loss_b'].append(outer_loss_val_b)
-                # val_loss['outer_loss_f'].append(outer_loss_val_f)
                 val_loss['inner_loss'].append(inner_loss_val)
                 val_loss['inner_loss_b'].append(inner_loss_val_b)
                 val_loss['inner_loss_f'].append(inner_loss_val_f)
+
+                nrmse['nrmse_val'].append(nrmse_val)
                     
                 # out-of-distribution
                 # val_ood_task = generate_task(1, ood=True)
                 val_ood_task = [(1.3, 1.3)]
-                inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f = self._outer_loop(val_ood_task, train=False)
-                print("Validation OOD ({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f}"
-                .format(self._train_step, np.mean(inner_loss_val_ood_b), np.mean(inner_loss_val_ood_f), val_ood_task[0][0], val_ood_task[0][1], np.mean(inner_loss_val_ood)))
+                inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
+                print("Validation OOD ({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+                .format(self._train_step, np.mean(inner_loss_val_ood_b), np.mean(inner_loss_val_ood_f), val_ood_task[0][0], val_ood_task[0][1], np.mean(inner_loss_val_ood), nrmse_val_ood))
 
-                # val_ood_loss['outer_loss'].append(outer_loss_val_ood)
-                # val_ood_loss['outer_loss_b'].append(outer_loss_val_ood_b)
-                # val_ood_loss['outer_loss_f'].append(outer_loss_val_ood_f)
                 val_ood_loss['inner_loss'].append(inner_loss_val_ood)
                 val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b)
                 val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f)
+
+                nrmse['nrmse_val_ood'].append(nrmse_val_ood)
         
-        return train_loss, val_loss, val_ood_loss, self.model
+        return train_loss, val_loss, val_ood_loss, nrmse, self.model
 
 def main():
     maml = MAML(5, 0.01, 0.01, 2, 100)

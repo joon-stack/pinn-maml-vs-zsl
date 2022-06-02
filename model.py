@@ -38,6 +38,8 @@ class PINN(nn.Module):
             layers.append(layer)
 
         self.module1 = nn.Sequential(*layers)
+
+        self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     
     def forward(self, input):
         # input      = torch.cat([x, t], axis=1)
@@ -77,6 +79,26 @@ class PINN(nn.Module):
         func = nn.MSELoss()
         return func(f, target)
     
+    def validate(self, alpha, beta):
+        """Validate the model via comparison between prediction and ground truth (mostly analytical solution).
+
+        args:
+            alpha (float): alpha of the given equation
+            beta (float): beta of the given equation
+
+        Returns:
+            nrmse (float): NRMSE between prediction and ground truth
+
+        """
+
+        X = torch.Tensor(np.linspace(-1, 1, num=100).reshape(-1, 1)).to(self.device)
+        pred = self(X)
+        sol  = torch.sin(alpha * X) + torch.cos(beta * X) + 0.1 * X
+        loss_fn = torch.nn.MSELoss(reduction='sum')
+        nrmse = torch.sqrt(loss_fn(pred, sol) / torch.sum(X ** 2)).item()
+
+        return nrmse
+
 if __name__ == "__main__":
     a = PINN(5, 5)
     

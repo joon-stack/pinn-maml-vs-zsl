@@ -13,7 +13,7 @@ from copy import deepcopy
 
 LOG_INTERVAL = 100
 VAL_INTERVAL = 50
-SAVE_INTERVAL = 1000
+SAVE_INTERVAL = 100
 
 class MAML:
     def __init__(self, num_inner_steps, inner_lr, outer_lr, num_data_b, num_data_f):
@@ -141,7 +141,7 @@ class MAML:
             train (bool): whether we are training or evaluating
 
         Returns:
-            outer_loss (Tensor): mean MAML loss over the batch
+            outer_loss (Tensor): mean MAML loss over the batchk
             accuracies_support (ndarray): support set accuracy over the
                 course of the inner loop, averaged over the task batch
                 shape (num_inner_steps + 1,)
@@ -159,6 +159,10 @@ class MAML:
         model_outer.load_state_dict(theta)
         model_outer.to(self.device)
 
+        grad_sum = [torch.zeros(w.shape).to(self.device) for w in list(model_outer.parameters())]
+
+        nrmse_batch = []
+
         for task in task_batch:
             support = task
             phi, grad, loss_sup_b, loss_sup_f, loss_sup, nrmse = self._inner_loop(theta, support, train)
@@ -167,7 +171,11 @@ class MAML:
             inner_loss.append(loss_sup[-1])
             model_outer.load_state_dict(phi)
 
-            grad_sum = grad
+            if train:
+                for g_sum, g in zip(grad_sum, grad):
+                    g_sum += g
+            else:
+                nrmse_batch += [nrmse]
 
         if train:
             for g in grad_sum:
@@ -176,10 +184,10 @@ class MAML:
                 w.grad = g
             self._optimizer.step()
 
-        return np.mean(inner_loss), np.mean(inner_loss_b), np.mean(inner_loss_f), nrmse
+        return np.mean(inner_loss), np.mean(inner_loss_b), np.mean(inner_loss_f), nrmse_batch
     
     
-    def train(self, train_steps, num_train_tasks):
+    def train(self, train_steps, num_train_tasks, num_val_tasks):
         """Train the MAML.
 
         Optimizes MAML meta-parameters
@@ -214,7 +222,33 @@ class MAML:
                     'nrmse_val_ood': []
                 }
 
-        
+        val_task = generate_task(num_val_tasks)
+        val_ood_task = generate_task(num_val_tasks, ood=True)
+
+        print(val_task)
+        print(val_ood_task)
+
+        inner_loss_val, inner_loss_val_b, inner_loss_val_f, nrmse_val = self._outer_loop(val_task, train=False)
+        print("Validation before training ({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+        .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0][0], val_task[0][1], np.mean(inner_loss_val), np.mean(nrmse_val)))
+
+        val_loss['inner_loss'].append(inner_loss_val)
+        val_loss['inner_loss_b'].append(inner_loss_val_b)
+        val_loss['inner_loss_f'].append(inner_loss_val_f)
+
+        nrmse['nrmse_val'].append(nrmse_val)
+            
+        # out-of-distribution
+        inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
+        print("Validation OOD before training ({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+        .format(self._train_step, np.mean(inner_loss_val_ood_b), np.mean(inner_loss_val_ood_f), val_ood_task[0][0], val_ood_task[0][1], np.mean(inner_loss_val_ood), np.mean(nrmse_val_ood)))
+
+        val_ood_loss['inner_loss'].append(inner_loss_val_ood)
+        val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b)
+        val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f)
+
+        nrmse['nrmse_val_ood'].append(nrmse_val_ood)
+
         for i in range(1, train_steps + 1):
             self._train_step += 1
             train_task = generate_task(num_train_tasks)
@@ -223,6 +257,8 @@ class MAML:
             train_loss['inner_loss'].append(inner_loss)
             train_loss['inner_loss_b'].append(inner_loss_b)
             train_loss['inner_loss_f'].append(inner_loss_f)
+
+            # print(list(self.model.parameters())[0][0])
             
             if i % SAVE_INTERVAL == 0:
                 print("Model saved")
@@ -237,10 +273,10 @@ class MAML:
                 
                 # in-distibution
                 # val_task = generate_task(1)
-                val_task = [(0.5, 0.5)]
+                # val_task = [(0.5, 0.5)]
                 inner_loss_val, inner_loss_val_b, inner_loss_val_f, nrmse_val = self._outer_loop(val_task, train=False)
                 print("Validation ({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
-                .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0][0], val_task[0][1], np.mean(inner_loss_val), nrmse_val))
+                .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0][0], val_task[0][1], np.mean(inner_loss_val), np.mean(nrmse_val)))
 
                 val_loss['inner_loss'].append(inner_loss_val)
                 val_loss['inner_loss_b'].append(inner_loss_val_b)
@@ -250,10 +286,10 @@ class MAML:
                     
                 # out-of-distribution
                 # val_ood_task = generate_task(1, ood=True)
-                val_ood_task = [(1.3, 1.3)]
+                # val_ood_task = [(1.3, 1.3)]
                 inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
                 print("Validation OOD ({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
-                .format(self._train_step, np.mean(inner_loss_val_ood_b), np.mean(inner_loss_val_ood_f), val_ood_task[0][0], val_ood_task[0][1], np.mean(inner_loss_val_ood), nrmse_val_ood))
+                .format(self._train_step, np.mean(inner_loss_val_ood_b), np.mean(inner_loss_val_ood_f), val_ood_task[0][0], val_ood_task[0][1], np.mean(inner_loss_val_ood), np.mean(nrmse_val_ood)))
 
                 val_ood_loss['inner_loss'].append(inner_loss_val_ood)
                 val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b)

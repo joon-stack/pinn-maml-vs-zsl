@@ -30,19 +30,20 @@ class CustomDataset(Dataset):
 
 
 
-def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, zero_shot=False, alpha_list=None, beta_list=None):
+def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, zero_shot=False, alpha_list=None, beta_list=None, load_data=None):
     batch_count = 1
  
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     print("Current device:", device)
 
-    model = PINN(20, 3)
+    model = PINN(20, 5)
 
     if zero_shot:
         model = PINN(20, 5, zero_shot)
 
     if load:
-        model.load_state_dict(torch.load('saved.data'))
+        model.load_state_dict(torch.load(load_data))
+        print("Model loaded succefully {}".format(load_data))
 
     model.to(device)
     
@@ -103,6 +104,9 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
 
     val_loss = []
     val_ood_loss = []
+
+    nrmse_set = []
+
     if i_size > 0:
         for epoch in range(epochs):
             model.train()
@@ -171,7 +175,10 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                 for m in range(zero_shot_num):
                     input_f_batch = input_f[f_size * m : f_size * (m + 1)]
                     target_f_batch = target_f[f_size * m : f_size * (m + 1)]
-                    loss_f += model.calc_loss_f(input_f_batch, target_f_batch)
+                    if zero_shot:
+                        loss_f += model.calc_loss_f(input_f_batch, target_f_batch)
+                    else:
+                        loss_f += model.calc_loss_f(input_f_batch, target_f_batch, alpha, beta)
 
                 loss_b.to(device)
                 loss_f.to(device)
@@ -194,27 +201,33 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                     loss_save = loss.item()
 
             if epoch % 50 == 49:
-                with torch.no_grad():
-                    model.eval()
-                    alpha_val, beta_val = sample_data(1, -1, 1), sample_data(1, -1, 1)
-                    alpha_val_ood, beta_val_ood = sample_data(1, 1, 1.5), sample_data(1, 1, 1.5)
-                    x = np.linspace(-1, 1, num=100).reshape(-1, 1)
-                    
-                    loss_val = evaluate(x, alpha_val, beta_val, model, device)
-                    loss_val_ood = evaluate(x, alpha_val_ood, beta_val_ood, model, device)
+                if zero_shot:
+                    with torch.no_grad():
+                        model.eval()
+                        alpha_val, beta_val = sample_data(1, -1, 1), sample_data(1, -1, 1)
+                        alpha_val_ood, beta_val_ood = sample_data(1, 1, 1.5), sample_data(1, 1, 1.5)
+                        x = np.linspace(-1, 1, num=100).reshape(-1, 1)
+                        
+                        loss_val = evaluate(x, alpha_val, beta_val, model, device)
+                        loss_val_ood = evaluate(x, alpha_val_ood, beta_val_ood, model, device)
 
-                    val_loss += [loss_val]
-                    val_ood_loss += [loss_val_ood]
+                        val_loss += [loss_val]
+                        val_ood_loss += [loss_val_ood]
 
-                    print("alpha, beta: {}, {} Val. MSE: {:.3f} | alpha, beta: {}, {} Val. OOD MSE: {:.3f}".format(alpha_val, beta_val, loss_val.item(), alpha_val_ood, beta_val_ood, loss_val_ood.item()))
+                        print("alpha, beta: {}, {} Val. NRMSE: {:.3f} | alpha, beta: {}, {} Val. OOD NRMSE: {:.3f}".format(alpha_val, beta_val, loss_val.item(), alpha_val_ood, beta_val_ood, loss_val_ood.item()))
+                
                     
 
             if epoch % 100 == 99:
                 with torch.no_grad():
                     model.eval()
                     print("Epoch {0} | Loss_I: {1:.4f} | Loss_B: {2:.4f} | Loss_F: {3:.4f}".format(epoch + 1, np.mean(train_loss_i), np.mean(train_loss_b), np.mean(train_loss_f)))
+                    if not zero_shot:
+                        nrmse = model.validate(alpha=alpha_list, beta=beta_list)
+                        print("NRMSE: {:.4f}".format(nrmse))
+                        nrmse_set.append(nrmse)
         
-    return train_loss_i, train_loss_b, train_loss_f, train_loss, model, val_loss, val_ood_loss
+    return train_loss_i, train_loss_b, train_loss_f, train_loss, model, val_loss, val_ood_loss, nrmse_set
 
 
 if __name__ == "__main__":

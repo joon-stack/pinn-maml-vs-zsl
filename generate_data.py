@@ -122,16 +122,15 @@ def plot_generated_data(i_set=None, b_set=None, f_set=None):
         i_plt = i_set[:,0].detach().numpy()
         plt.scatter(i_plt, label='initial')
     b_plt = b_set[0].detach().numpy()
-    print(b_plt.shape)
     if b_plt.shape[1] == 1:
         plt.scatter(b_plt, np.zeros(b_plt.shape), label='boundary')
     else:
-        plt.scatter(b_plt, label='boundary')
+        plt.scatter(b_plt[:, 0], np.zeros(b_plt[:, 0].shape), label='boundary')
     f_plt = f_set[0].detach().numpy()
     if f_plt.shape[1] == 1:
         plt.scatter(f_plt, np.zeros(f_plt.shape), label='domain')
     else:
-        plt.scatter(f_plt, label='domain')
+        plt.scatter(f_plt[:, 0], np.zeros(f_plt[:, 0].shape), label='domain')
     
     plt.legend()
     plt.show()

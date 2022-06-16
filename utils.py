@@ -29,6 +29,8 @@ def evaluate(x, alpha, beta, model, device):
         output_val = model(torch.Tensor(input_val).to(device)).detach().cpu()
         truth_val = torch.Tensor(ground_truth(x, a, b))
         loss_val += torch.sqrt(loss_func_val(output_val, truth_val) / torch.sum(output_val ** 2))
+    
+    loss_val /= len(alpha)
 
     return loss_val
 

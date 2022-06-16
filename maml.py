@@ -13,12 +13,12 @@ from copy import deepcopy
 from burgers import *
 
 
-LOG_INTERVAL = 1
-VAL_INTERVAL = 50
+LOG_INTERVAL = 20
+VAL_INTERVAL = 20
 SAVE_INTERVAL = 100
 
 class MAML:
-    def __init__(self, num_inner_steps, inner_lr, outer_lr, num_data_i, num_data_b, num_data_f, low, high, eqname='burgers', zero_shot=False):
+    def __init__(self, num_inner_steps, inner_lr, outer_lr, num_data_i, num_data_b, num_data_f, low, high, eqname='burgers', zero_shot=False, load=False, modelpath=None):
 
         """Initializes First-Order Model-Agnostic Meta-Learning to train Physics-Informed Neural Networks.
 
@@ -33,15 +33,19 @@ class MAML:
         print("Initializing MAML-PINN model")
 
         if eqname == 'burgers':
-            self.model = PINN(20, 5, zero_shot=zero_shot, dim=2)
+            self.model = PINN(20, 8, zero_shot=zero_shot, dim=2, param_num=1)
         elif eqname == 'poisson':
             self.model = PINN(20, 5, zero_shot=zero_shot, dim=1)
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         print("Current device: ", self.device)
         self._save_dir = 'models/maml_{}.data'.format(eqname)
         os.makedirs(self._save_dir, exist_ok=True)
+        if load:
+            self.model.load_state_dict(torch.load(modelpath))
+            print("Model loaded successfully from {}".format(modelpath))
         self.model.to(self.device)
         print(self.model.device)
+        
 
         self._num_inner_steps = num_inner_steps
         
@@ -61,6 +65,7 @@ class MAML:
         self.eqname = eqname
 
         self.zero_shot = zero_shot
+        print('Zero shot mode is' , self.zero_shot)
 
         print("Finished initialization of MAML-PINN model")
     
@@ -90,9 +95,17 @@ class MAML:
         inner_loss_f = []
         inner_loss   = []
 
+        nrmse_batch = []
+
         model_phi = deepcopy(self.model)
         model_phi.load_state_dict(theta)
         model_phi.to(self.device)
+        # print(list(model_phi.parameters())[0][0])
+
+        if train:
+            model_phi.train()
+        else:
+            model_phi.eval()
 
         loss_fn = torch.nn.MSELoss()
         opt_fn = torch.optim.SGD(model_phi.parameters(), lr=self._inner_lr)
@@ -105,12 +118,18 @@ class MAML:
             support_data_f = make_training_domain_data(self._num_data_f, alpha=alpha, beta=beta, low=self.low, high=self.high, zero_shot=self.zero_shot)
         elif self.eqname == 'burgers':
             alpha = support
-            support_data_i = make_training_initial_data_burgers(self._num_data_i, alpha=alpha, low=self.low, high=self.high, zero_shot=self.zero_shot)
-            support_data_b = make_training_boundary_data_burgers(self._num_data_b, alpha=alpha, low=self.low, high=self.high, zero_shot=self.zero_shot)
-            support_data_f = make_training_domain_data_burgers(self._num_data_f, alpha=alpha, low=self.low, high=self.high, zero_shot=self.zero_shot)
+            num_data_i = self._num_data_i if train else 100
+            num_data_b = self._num_data_b if train else 100
+            num_data_f = self._num_data_f if train else 1000
+            support_data_i = make_training_initial_data_burgers(num_data_i, alpha=alpha, low=self.low, high=self.high, zero_shot=self.zero_shot)
+            support_data_b = make_training_boundary_data_burgers(num_data_b, alpha=alpha, low=self.low, high=self.high, zero_shot=self.zero_shot)
+            support_data_f = make_training_domain_data_burgers(num_data_f, alpha=alpha, low=self.low, high=self.high, zero_shot=self.zero_shot)
+
+        num_inner_steps = self._num_inner_steps
 
         if self.eqname == 'poisson':
-            for _ in range(self._num_inner_steps): 
+            for _ in range(num_inner_steps): 
+                nrmse = model_phi.validate(alpha, beta, low=self.low, high=self.high) if not train else None
                 opt_fn.zero_grad()
                 input_b, target_b = support_data_b
                 input_f, target_f = support_data_f
@@ -122,19 +141,25 @@ class MAML:
                 loss_b = loss_fn(model_phi(input_b), target_b)
                 loss_f = model_phi.calc_loss_f(input_f, target_f, alpha, beta)
 
-                loss_b.to(self.device)
-                loss_f.to(self.device)
-
                 loss = loss_b * 10 + loss_f
 
                 loss.backward()
-                
+                    
                 opt_fn.step()
 
                 inner_loss_b += [loss_b.item()]
                 inner_loss_f += [loss_f.item()]
                 inner_loss   += [loss.item()]
+                
+                if not train:
+                    nrmse_batch += [nrmse]
 
+            input_b, target_b = support_data_b
+            input_f, target_f = support_data_f
+            input_b = input_b.to(self.device)
+            target_b = target_b.to(self.device)
+            input_f = input_f.to(self.device)
+            target_f = target_f.to(self.device)
             loss_b = loss_fn(model_phi(input_b), target_b)
             loss_f = model_phi.calc_loss_f(input_f, target_f, alpha, beta)
             loss = loss_b * 10 + loss_f
@@ -142,14 +167,24 @@ class MAML:
             inner_loss_f += [loss_f.item()]
             inner_loss   += [loss.item()]
             grad = torch.autograd.grad(loss, model_phi.parameters()) if train else None
-
+            nrmse = model_phi.validate(alpha, beta, low=self.low, high=self.high) if not train else None
+            if not train:
+                nrmse_batch += [nrmse]
             phi = model_phi.state_dict()
-
-            
-            nrmse = model_phi.validate(alpha, beta) if not train else None
+            # print(inner_loss_b)
+ 
 
         elif self.eqname == 'burgers':
-            for _ in range(self._num_inner_steps): 
+            if not train:
+                input_f, target_f = support_data_f
+                truth = model_phi.get_burgers(alpha=input_f[0].detach().numpy()[-1])
+            
+            for _ in range(num_inner_steps): 
+                nrmse = model_phi.validate_burgers(model_phi, alpha, truth) if not train else None
+                if not train:
+                    nrmse_batch += [nrmse]
+
+
                 opt_fn.zero_grad()
                 input_i, target_i = support_data_i
                 input_b, target_b = support_data_b
@@ -172,7 +207,6 @@ class MAML:
                 loss = loss_i + loss_b + loss_f
 
                 loss.backward()
-                
                 opt_fn.step()
 
                 inner_loss_i += [loss_i.item()]
@@ -180,6 +214,15 @@ class MAML:
                 inner_loss_f += [loss_f.item()]
                 inner_loss   += [loss.item()]
 
+            input_i, target_i = support_data_i
+            input_b, target_b = support_data_b
+            input_f, target_f = support_data_f
+            input_i = input_i.to(self.device)
+            target_i = target_i.to(self.device)
+            input_b = input_b.to(self.device)
+            target_b = target_b.to(self.device)
+            input_f = input_f.to(self.device)
+            target_f = target_f.to(self.device)
             loss_i = loss_fn(model_phi(input_i), target_i)
             loss_b = loss_fn(model_phi(input_b), target_b)
             loss_f = model_phi.calc_loss_f_burgers(input_f, target_f, alpha)
@@ -189,18 +232,20 @@ class MAML:
             inner_loss_f += [loss_f.item()]
             inner_loss   += [loss.item()]
             grad = torch.autograd.grad(loss, model_phi.parameters()) if train else None
+            
 
             phi = model_phi.state_dict()
 
-            # nrmse = None
-            # nrmse = model_phi.validate(alpha, beta) if not train else None
-            nrmse = model_phi.validate_burgers(alpha) if not train else None
+            nrmse = model_phi.validate_burgers(model_phi, alpha, truth) if not train else None
+            if not train:
+                nrmse_batch += [nrmse]
 
         assert phi != None
-        assert len(inner_loss) == self._num_inner_steps + 1
+        assert len(inner_loss) == num_inner_steps + 1
 
 
-        return phi, grad, inner_loss_i, inner_loss_b, inner_loss_f, inner_loss, nrmse
+
+        return phi, grad, inner_loss_i, inner_loss_b, inner_loss_f, inner_loss, nrmse_batch
 
 
     def _outer_loop(self, task_batch, train=None):
@@ -228,22 +273,43 @@ class MAML:
         inner_loss_f = []
         inner_loss   = []
 
+        grad_sum = [torch.zeros(w.shape).to(self.device) for w in list(self.model.parameters())]
+
+        nrmse_batch = []
+
         model_outer = deepcopy(self.model)
         model_outer.load_state_dict(theta)
         model_outer.to(self.device)
 
-        grad_sum = [torch.zeros(w.shape).to(self.device) for w in list(model_outer.parameters())]
-
-        nrmse_batch = []
+        loss_fn = nn.MSELoss()
 
         if self.eqname == 'poisson':
             for task in task_batch:
                 support = task
+                query = task
+                alpha, beta = query
                 phi, grad, loss_sup_i, loss_sup_b, loss_sup_f, loss_sup, nrmse = self._inner_loop(theta, support, train)
-                inner_loss_b.append(loss_sup_b[-1])
-                inner_loss_f.append(loss_sup_f[-1])
-                inner_loss.append(loss_sup[-1])
+                inner_loss_b.append(loss_sup_b)
+                inner_loss_f.append(loss_sup_f)
+                inner_loss.append(loss_sup)
+
                 model_outer.load_state_dict(phi)
+                
+                query_data_b = make_training_boundary_data(self._num_data_b, alpha=alpha, beta=beta, low=self.low, high=self.high, zero_shot=self.zero_shot)
+                query_data_f = make_training_domain_data(self._num_data_f, alpha=alpha, beta=beta, low=self.low, high=self.high, zero_shot=self.zero_shot)
+                
+                input_b, target_b = query_data_b
+                input_f, target_f = query_data_f
+                input_b = input_b.to(self.device)
+                target_b = target_b.to(self.device)
+                input_f = input_f.to(self.device)
+                target_f = target_f.to(self.device)
+
+                loss_b = loss_fn(model_outer(input_b), target_b)
+                loss_f = model_outer.calc_loss_f(input_f, target_f, alpha, beta)
+
+                loss = loss_b * 10 + loss_f
+                grad = torch.autograd.grad(loss, model_outer.parameters()) if train else None
 
                 if train:
                     for g_sum, g in zip(grad_sum, grad):
@@ -257,24 +323,24 @@ class MAML:
                 for w, g in zip(list(self.model.parameters()), grad_sum):
                     w.grad = g
                 self._optimizer.step()
-
-            return np.mean(inner_loss), np.mean(inner_loss_b), np.mean(inner_loss_f), nrmse_batch
+            
+            return np.mean(inner_loss, axis=0), np.mean(inner_loss_b, axis=0), np.mean(inner_loss_f, axis=0), np.mean(nrmse_batch, axis=0)
         
         elif self.eqname == 'burgers':
             for task in task_batch:
                 support = task
                 phi, grad, loss_sup_i, loss_sup_b, loss_sup_f, loss_sup, nrmse = self._inner_loop(theta, support, train)
-                inner_loss_i.append(loss_sup_i[-1])
-                inner_loss_b.append(loss_sup_b[-1])
-                inner_loss_f.append(loss_sup_f[-1])
-                inner_loss.append(loss_sup[-1])
-                model_outer.load_state_dict(phi)
+                inner_loss_i.append(loss_sup_i)
+                inner_loss_b.append(loss_sup_b)
+                inner_loss_f.append(loss_sup_f)
+                inner_loss.append(loss_sup)
 
                 if train:
                     for g_sum, g in zip(grad_sum, grad):
                         g_sum += g
                 else:
                     nrmse_batch += [nrmse]
+ 
             if train:
                 for g in grad_sum:
                     g /= len(task_batch)
@@ -282,7 +348,7 @@ class MAML:
                     w.grad = g
                 self._optimizer.step()
 
-            return np.mean(inner_loss), np.mean(inner_loss_i), np.mean(inner_loss_b), np.mean(inner_loss_f), nrmse_batch
+            return np.mean(inner_loss, axis=0), np.mean(inner_loss_i, axis=0), np.mean(inner_loss_b, axis=0), np.mean(inner_loss_f, axis=0), np.mean(nrmse_batch, axis=0)
     
     
     def train(self, train_steps, num_train_tasks, num_val_tasks):
@@ -305,13 +371,18 @@ class MAML:
                         }
 
             val_loss = {
-
+                            'inner_loss_pre_adapt': [],
+                            'inner_loss_b_pre_adapt': [],
+                            'inner_loss_f_pre_adapt': [],
                             'inner_loss': [],
                             'inner_loss_b': [],
-                            'inner_loss_f': []
+                            'inner_loss_f': [],
                         }
 
             val_ood_loss = {
+                            'inner_loss_pre_adapt': [],
+                            'inner_loss_b_pre_adapt': [],
+                            'inner_loss_f_pre_adapt': [],
                             'inner_loss': [],
                             'inner_loss_b': [],
                             'inner_loss_f': []
@@ -319,35 +390,57 @@ class MAML:
             
             nrmse = {
                         'nrmse_val': [],
-                        'nrmse_val_ood': []
+                        'nrmse_val_ood': [],
+                        'nrmse_val_pre_adapt': [],
+                        'nrmse_val_ood_pre_adapt': [],
                     }
 
             val_task = generate_task(num_val_tasks)
             val_ood_task = generate_task(num_val_tasks, ood=True)
 
-            print(val_task)
-            print(val_ood_task)
+            # print(val_task)
+            # print(val_ood_task)
 
             inner_loss_val, inner_loss_val_b, inner_loss_val_f, nrmse_val = self._outer_loop(val_task, train=False)
-            print("Validation before training ({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
-            .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0][0], val_task[0][1], np.mean(inner_loss_val), np.mean(nrmse_val)))
+            print("Validation before training Pre-Adapt({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+            .format(self._train_step, inner_loss_val_b[0], inner_loss_val_f[0], val_task[0][0], val_task[0][1], inner_loss_val[0], nrmse_val[0]))
 
-            val_loss['inner_loss'].append(inner_loss_val)
-            val_loss['inner_loss_b'].append(inner_loss_val_b)
-            val_loss['inner_loss_f'].append(inner_loss_val_f)
+            val_loss['inner_loss_pre_adapt'].append(inner_loss_val[0])
+            val_loss['inner_loss_b_pre_adapt'].append(inner_loss_val_b[0])
+            val_loss['inner_loss_f_pre_adapt'].append(inner_loss_val_f[0])
 
-            nrmse['nrmse_val'].append(nrmse_val)
+            nrmse['nrmse_val_pre_adapt'].append(nrmse_val[0])
+
+            inner_loss_val, inner_loss_val_b, inner_loss_val_f, nrmse_val = self._outer_loop(val_task, train=False)
+            print("Validation before training Post-Adapt({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+            .format(self._train_step, inner_loss_val_b[-1], inner_loss_val_f[-1], val_task[0][0], val_task[0][1], inner_loss_val[-1], nrmse_val[-1]))
+
+            val_loss['inner_loss'].append(inner_loss_val[-1])
+            val_loss['inner_loss_b'].append(inner_loss_val_b[-1])
+            val_loss['inner_loss_f'].append(inner_loss_val_f[-1])
+
+            nrmse['nrmse_val'].append(nrmse_val[-1])
                 
             # out-of-distribution
             inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
-            print("Validation OOD before training ({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
-            .format(self._train_step, np.mean(inner_loss_val_ood_b), np.mean(inner_loss_val_ood_f), val_ood_task[0][0], val_ood_task[0][1], np.mean(inner_loss_val_ood), np.mean(nrmse_val_ood)))
+            print("Validation OOD before training Pre-Adapt({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+            .format(self._train_step, inner_loss_val_ood_b[0], inner_loss_val_ood_f[0], val_ood_task[0][0], val_ood_task[0][1], inner_loss_val_ood[0], nrmse_val_ood[0]))
 
-            val_ood_loss['inner_loss'].append(inner_loss_val_ood)
-            val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b)
-            val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f)
+            val_ood_loss['inner_loss_pre_adapt'].append(inner_loss_val_ood[0])
+            val_ood_loss['inner_loss_b_pre_adapt'].append(inner_loss_val_ood_b[0])
+            val_ood_loss['inner_loss_f_pre_adapt'].append(inner_loss_val_ood_f[0])
 
-            nrmse['nrmse_val_ood'].append(nrmse_val_ood)
+            nrmse['nrmse_val_ood_pre_adapt'].append(nrmse_val_ood[0])
+
+            inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
+            print("Validation OOD before training Post-Adapt({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+            .format(self._train_step, inner_loss_val_ood_b[-1], inner_loss_val_ood_f[-1], val_ood_task[0][0], val_ood_task[0][1], inner_loss_val_ood[-1], nrmse_val_ood[-1]))
+
+            val_ood_loss['inner_loss'].append(inner_loss_val_ood[-1])
+            val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b[-1])
+            val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f[-1])
+
+            nrmse['nrmse_val_ood'].append(nrmse_val_ood[-1])
 
             for i in range(1, train_steps + 1):
                 self._train_step += 1
@@ -366,36 +459,58 @@ class MAML:
 
                 if i % LOG_INTERVAL == 0:
                     
-                    print("Step {0} | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f}"
-                    .format(self._train_step, np.mean(inner_loss_b), np.mean(inner_loss_f)))
-                
+                    print("Step {0} Pre-Adapt | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {3:.4f}"
+                    .format(self._train_step, inner_loss_b[0], inner_loss_f[0], inner_loss[0]))
+
+                    print("Step {0} Post-Adapt | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {3:.4f}"
+                    .format(self._train_step, inner_loss_b[-1], inner_loss_f[-1], inner_loss[-1]))
+
                 if i % VAL_INTERVAL == 0:
                     
                     # in-distibution
                     # val_task = generate_task(1)
                     # val_task = [(0.5, 0.5)]
                     inner_loss_val, inner_loss_val_b, inner_loss_val_f, nrmse_val = self._outer_loop(val_task, train=False)
-                    print("Validation ({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
-                    .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0][0], val_task[0][1], np.mean(inner_loss_val), np.mean(nrmse_val)))
-                    val_loss['inner_loss'].append(inner_loss_val)
-                    val_loss['inner_loss_b'].append(inner_loss_val_b)
-                    val_loss['inner_loss_f'].append(inner_loss_val_f)
+                    print("Validation before training Pre-Adapt({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+                    .format(self._train_step, inner_loss_val_b[0], inner_loss_val_f[0], val_task[0][0], val_task[0][1], inner_loss_val[0], nrmse_val[0]))
 
-                    nrmse['nrmse_val'].append(nrmse_val)
+                    
+                    val_loss['inner_loss_pre_adapt'].append(inner_loss_val[0])
+                    val_loss['inner_loss_b_pre_adapt'].append(inner_loss_val_b[0])
+                    val_loss['inner_loss_f_pre_adapt'].append(inner_loss_val_f[0])
+
+                    nrmse['nrmse_val_pre_adapt'].append(nrmse_val[0])
+
+                    print("Validation before training Post-Adapt({3:.3f}, {4:.3f})| Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+                    .format(self._train_step, inner_loss_val_b[-1], inner_loss_val_f[-1], val_task[0][0], val_task[0][1], inner_loss_val[-1], nrmse_val[-1]))
+
+                    val_loss['inner_loss'].append(inner_loss_val[-1])
+                    val_loss['inner_loss_b'].append(inner_loss_val_b[-1])
+                    val_loss['inner_loss_f'].append(inner_loss_val_f[-1])
+
+                    nrmse['nrmse_val'].append(nrmse_val[-1])
                         
                     # out-of-distribution
-                    # val_ood_task = generate_task(1, ood=True)
-                    # val_ood_task = [(1.3, 1.3)]
                     inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
-                    print("Validation OOD ({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
-                    .format(self._train_step, np.mean(inner_loss_val_ood_b), np.mean(inner_loss_val_ood_f), val_ood_task[0][0], val_ood_task[0][1], np.mean(inner_loss_val_ood), np.mean(nrmse_val_ood)))
+                    print("Validation OOD before training Pre-Adapt({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+                    .format(self._train_step, inner_loss_val_ood_b[0], inner_loss_val_ood_f[0], val_ood_task[0][0], val_ood_task[0][1], inner_loss_val_ood[0], nrmse_val_ood[0]))
 
-                    val_ood_loss['inner_loss'].append(inner_loss_val_ood)
-                    val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b)
-                    val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f)
+                    val_ood_loss['inner_loss_pre_adapt'].append(inner_loss_val_ood[0])
+                    val_ood_loss['inner_loss_b_pre_adapt'].append(inner_loss_val_ood_b[0])
+                    val_ood_loss['inner_loss_f_pre_adapt'].append(inner_loss_val_ood_f[0])
 
-                    nrmse['nrmse_val_ood'].append(nrmse_val_ood)
-            
+                    nrmse['nrmse_val_ood_pre_adapt'].append(nrmse_val_ood[0])
+
+                    inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
+                    print("Validation OOD before training Post-Adapt({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+                    .format(self._train_step, inner_loss_val_ood_b[-1], inner_loss_val_ood_f[-1], val_ood_task[0][0], val_ood_task[0][1], inner_loss_val_ood[-1], nrmse_val_ood[-1]))
+
+                    val_ood_loss['inner_loss'].append(inner_loss_val_ood[-1])
+                    val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b[-1])
+                    val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f[-1])
+
+                    nrmse['nrmse_val_ood'].append(nrmse_val_ood[-1])
+                    
             return train_loss, val_loss, val_ood_loss, nrmse, self.model
         
         elif self.eqname == 'burgers':
@@ -404,7 +519,11 @@ class MAML:
                             'inner_loss': [],
                             'inner_loss_i': [],
                             'inner_loss_b': [],
-                            'inner_loss_f': []
+                            'inner_loss_f': [],
+                            'inner_loss_pre_adapt': [],
+                            'inner_loss_i_pre_adapt': [],
+                            'inner_loss_b_pre_adapt': [],
+                            'inner_loss_f_pre_adapt': []
                         }
 
             val_loss = {
@@ -412,37 +531,79 @@ class MAML:
                             'inner_loss': [],
                             'inner_loss_i': [],
                             'inner_loss_b': [],
-                            'inner_loss_f': []
+                            'inner_loss_f': [],
+                            'inner_loss_pre_adapt': [],
+                            'inner_loss_i_pre_adapt': [],
+                            'inner_loss_b_pre_adapt': [],
+                            'inner_loss_f_pre_adapt': []
                         }
 
             val_ood_loss = {
                             'inner_loss': [],
                             'inner_loss_i': [],
                             'inner_loss_b': [],
-                            'inner_loss_f': []
+                            'inner_loss_f': [],
+                            'inner_loss_pre_adapt': [],
+                            'inner_loss_i_pre_adapt': [],
+                            'inner_loss_b_pre_adapt': [],
+                            'inner_loss_f_pre_adapt': []
                         }
             
             nrmse = {
                         'nrmse_val': [],
-                        'nrmse_val_ood': []
+                        'nrmse_val_ood': [],
+                        'nrmse_val_pre_adapt': [],
+                        'nrmse_val_ood_pre_adapt': []
                     }
 
             val_task = [(0.01 / np.pi)]
+            # val_task = generate_task_burgers(10)
+            val_ood_task = [(0.2 / np.pi)]
             # val_ood_task = generate_task(num_val_tasks, ood=True)
 
             print(val_task)
-            # print(val_ood_task)
+            print(val_ood_task)
 
             inner_loss_val, inner_loss_val_i, inner_loss_val_b, inner_loss_val_f, nrmse_val = self._outer_loop(val_task, train=False)
+            print("Validation before training Pre-Adaptation ({3:.3f})| Inner_loss_I: {4:.4f} | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
+            .format(self._train_step, inner_loss_val_b[0], inner_loss_val_f[0], val_task[0], inner_loss_val_i[0], inner_loss_val[0], nrmse_val[0]))
+
+            val_loss['inner_loss_pre_adapt'].append(inner_loss_val[0])
+            val_loss['inner_loss_i_pre_adapt'].append(inner_loss_val_i[0])
+            val_loss['inner_loss_b_pre_adapt'].append(inner_loss_val_b[0])
+            val_loss['inner_loss_f_pre_adapt'].append(inner_loss_val_f[0])
+
+            nrmse['nrmse_val_pre_adapt'].append(nrmse_val[0])
+
+
             print("Validation before training ({3:.3f})| Inner_loss_I: {4:.4f} | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
-            .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0], np.mean(inner_loss_val_i), np.mean(inner_loss_val), np.mean(nrmse_val)))
+            .format(self._train_step, inner_loss_val_b[-1], inner_loss_val_f[-1], val_task[0], inner_loss_val_i[-1], inner_loss_val[-1], nrmse_val[-1]))
 
-            val_loss['inner_loss'].append(inner_loss_val)
-            val_loss['inner_loss_i'].append(inner_loss_val_i)
-            val_loss['inner_loss_b'].append(inner_loss_val_b)
-            val_loss['inner_loss_f'].append(inner_loss_val_f)
+            val_loss['inner_loss'].append(inner_loss_val[-1])
+            val_loss['inner_loss_i'].append(inner_loss_val_i[-1])
+            val_loss['inner_loss_b'].append(inner_loss_val_b[-1])
+            val_loss['inner_loss_f'].append(inner_loss_val_f[-1])
 
-            nrmse['nrmse_val'].append(nrmse_val)
+            nrmse['nrmse_val'].append(nrmse_val[-1])
+
+            inner_loss_val_ood, inner_loss_val_ood_i, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
+            print("validation OOD before training Pre-Adaptation ({3:.3f})| Inner_loss_I: {6:.4f} |Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f} | NRMSE: {5:.4f}"
+            .format(self._train_step, inner_loss_val_ood_b[0], inner_loss_val_ood_f[0], val_ood_task[0], inner_loss_val_ood[0], nrmse_val_ood[0], inner_loss_val_ood_i[0]))
+            val_ood_loss['inner_loss_pre_adapt'].append(inner_loss_val_ood[0])
+            val_ood_loss['inner_loss_i_pre_adapt'].append(inner_loss_val_ood_i[0])
+            val_ood_loss['inner_loss_b_pre_adapt'].append(inner_loss_val_ood_b[0])
+            val_ood_loss['inner_loss_f_pre_adapt'].append(inner_loss_val_ood_f[0])
+
+            nrmse['nrmse_val_ood_pre_adapt'].append(nrmse_val_ood[0])
+
+            print("validation OOD before training ({3:.3f})| Inner_loss_I: {6:.4f} |Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f} | NRMSE: {5:.4f}"
+            .format(self._train_step, inner_loss_val_ood_b[-1], inner_loss_val_ood_f[-1], val_ood_task[0], inner_loss_val_ood[-1], nrmse_val_ood[-1], inner_loss_val_ood_i[-1]))
+            val_ood_loss['inner_loss'].append(inner_loss_val_ood[-1])
+            val_ood_loss['inner_loss_i'].append(inner_loss_val_ood_i[-1])
+            val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b[-1])
+            val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f[-1])
+
+            nrmse['nrmse_val_ood'].append(nrmse_val_ood[-1])
 
             for i in range(1, train_steps + 1):
                 self._train_step += 1
@@ -462,8 +623,10 @@ class MAML:
 
                 if i % LOG_INTERVAL == 0:
                     
-                    print("Step {0} | Inner_loss_I: {3:.4f} | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f}"
-                    .format(self._train_step, np.mean(inner_loss_b), np.mean(inner_loss_f), np.mean(inner_loss_i)))
+                    print("Step {0} Pre-Adapt | Inner_loss_I: {3:.4f} | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f}"
+                    .format(self._train_step, inner_loss_b[0], inner_loss_f[0], inner_loss_i[0], inner_loss[0]))
+                    print("Step {0} Post-Adapt | Inner_loss_I: {3:.4f} | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f}"
+                    .format(self._train_step, inner_loss_b[-1], inner_loss_f[-1], inner_loss_i[-1], inner_loss[-1]))
                 
                 if i % VAL_INTERVAL == 0:
                     
@@ -471,27 +634,42 @@ class MAML:
                     # val_task = generate_task_burgers(1)
                     # val_task = [(0.5, 0.5)]
                     inner_loss_val, inner_loss_val_i, inner_loss_val_b, inner_loss_val_f, nrmse_val = self._outer_loop(val_task, train=False)
-                    print("Validation ({3:.3f})| Inner_loss_I: {6:.4f} |Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f} | NRMSE: {5:.4f}"
-                    .format(self._train_step, np.mean(inner_loss_val_b), np.mean(inner_loss_val_f), val_task[0], np.mean(inner_loss_val), np.mean(nrmse_val), np.mean(inner_loss_val_i)))
-                    val_loss['inner_loss'].append(inner_loss_val)
-                    val_loss['inner_loss_i'].append(inner_loss_val_i)
-                    val_loss['inner_loss_b'].append(inner_loss_val_b)
-                    val_loss['inner_loss_f'].append(inner_loss_val_f)
+                    print("Validation Pre-adaptation ({3:.3f})| Inner_loss_I: {6:.4f} |Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f} | NRMSE: {5:.4f}"
+                    .format(self._train_step, inner_loss_val_b[0], inner_loss_val_f[0], val_task[0], inner_loss_val[0], nrmse_val[0], inner_loss_val_i[0]))
+                    val_loss['inner_loss_pre_adapt'].append(inner_loss_val[0])
+                    val_loss['inner_loss_i_pre_adapt'].append(inner_loss_val_i[0])
+                    val_loss['inner_loss_b_pre_adapt'].append(inner_loss_val_b[0])
+                    val_loss['inner_loss_f_pre_adapt'].append(inner_loss_val_f[0])
+                    nrmse['nrmse_val_pre_adapt'].append(nrmse_val[0])
 
-                    nrmse['nrmse_val'].append(nrmse_val)
+                    print("Validation Post-adaptation ({3:.3f})| Inner_loss_I: {6:.4f} |Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f} | NRMSE: {5:.4f}"
+                    .format(self._train_step, inner_loss_val_b[-1], inner_loss_val_f[-1], val_task[0], inner_loss_val[-1], nrmse_val[-1], inner_loss_val_i[-1]))
+                    val_loss['inner_loss'].append(inner_loss_val[-1])
+                    val_loss['inner_loss_i'].append(inner_loss_val_i[-1])
+                    val_loss['inner_loss_b'].append(inner_loss_val_b[-1])
+                    val_loss['inner_loss_f'].append(inner_loss_val_f[-1])
+                    nrmse['nrmse_val'].append(nrmse_val[-1])
                         
-                    # # out-of-distribution
-                    # # val_ood_task = generate_task(1, ood=True)
-                    # # val_ood_task = [(1.3, 1.3)]
-                    # inner_loss_val_ood, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
-                    # print("Validation OOD ({3:.3f}, {4:.3f}) | Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {5:.4f} | NRMSE: {6:.4f}"
-                    # .format(self._train_step, np.mean(inner_loss_val_ood_b), np.mean(inner_loss_val_ood_f), val_ood_task[0][0], val_ood_task[0][1], np.mean(inner_loss_val_ood), np.mean(nrmse_val_ood)))
+                    # out-of-distribution
+                    # val_ood_task = generate_task(1, ood=True)
+                    # val_ood_task = [(1.3, 1.3)]
+                    inner_loss_val_ood, inner_loss_val_ood_i, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
+                    print("validation OOD Pre-Adaptation ({3:.3f})| Inner_loss_I: {6:.4f} |Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f} | NRMSE: {5:.4f}"
+                    .format(self._train_step, inner_loss_val_ood_b[0], inner_loss_val_ood_f[0], val_ood_task[0], inner_loss_val_ood[0], nrmse_val_ood[0], inner_loss_val_ood_i[0]))
+                    val_ood_loss['inner_loss_pre_adapt'].append(inner_loss_val_ood[0])
+                    val_ood_loss['inner_loss_i_pre_adapt'].append(inner_loss_val_ood_i[0])
+                    val_ood_loss['inner_loss_b_pre_adapt'].append(inner_loss_val_ood_b[0])
+                    val_ood_loss['inner_loss_f_pre_adapt'].append(inner_loss_val_ood_f[0])
+                    nrmse['nrmse_val_ood_pre_adapt'].append(nrmse_val[0])
 
-                    # val_ood_loss['inner_loss'].append(inner_loss_val_ood)
-                    # val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b)
-                    # val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f)
-
-                    # nrmse['nrmse_val_ood'].append(nrmse_val_ood)
+                    inner_loss_val_ood, inner_loss_val_ood_i, inner_loss_val_ood_b, inner_loss_val_ood_f, nrmse_val_ood = self._outer_loop(val_ood_task, train=False)
+                    print("validation OOD Post-Adaptation ({3:.3f})| Inner_loss_I: {6:.4f} |Inner_loss_B: {1:.4f} | Inner_loss_F: {2:.4f} | Inner_loss: {4:.4f} | NRMSE: {5:.4f}"
+                    .format(self._train_step, inner_loss_val_ood_b[-1], inner_loss_val_ood_f[-1], val_ood_task[0], inner_loss_val_ood[-1], nrmse_val_ood[-1], inner_loss_val_ood_i[-1]))
+                    val_ood_loss['inner_loss'].append(inner_loss_val_ood[-1])
+                    val_ood_loss['inner_loss_i'].append(inner_loss_val_ood_i[-1])
+                    val_ood_loss['inner_loss_b'].append(inner_loss_val_ood_b[-1])
+                    val_ood_loss['inner_loss_f'].append(inner_loss_val_ood_f[-1])
+                    nrmse['nrmse_val_ood'].append(nrmse_val[-1])
             
             return train_loss, val_loss, val_ood_loss, nrmse, self.model
 

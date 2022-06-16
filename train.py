@@ -60,13 +60,6 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
 
     if eqname == 'poisson':
         if zero_shot:
-            # for alpha in alpha_list:
-            #     for beta in beta_list:
-            #         i, b, f = generate_data(i_size, b_size, f_size, zero_shot, alpha, beta, low, high)
-            #         if i:
-            #             i_set.append(i)
-            #         b_set.append(b)
-            #         f_set.append(f)
             for alpha, beta in zip(alpha_list, beta_list):
                 i, b, f = generate_data(i_size, b_size, f_size, zero_shot, alpha, beta, low, high)
                 if i:
@@ -121,14 +114,14 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
 
     if i_size > 0:
         dataset_train_initial  = CustomDataset(*i_set)
-        loader_train_initial   = DataLoader(dataset_train_initial,  batch_size=i_size // batch_count * zero_shot_num)
+        loader_train_initial   = DataLoader(dataset_train_initial, num_workers=0, batch_size=i_size // batch_count * zero_shot_num)
         train_loss_i = []
 
     dataset_train_boundary = CustomDataset(*b_set)
     dataset_train_domain   = CustomDataset(*f_set)
 
-    loader_train_boundary  = DataLoader(dataset_train_boundary, batch_size=b_size // batch_count * zero_shot_num)
-    loader_train_domain    = DataLoader(dataset_train_domain,   batch_size=f_size // batch_count * zero_shot_num)   
+    loader_train_boundary  = DataLoader(dataset_train_boundary, num_workers=0, batch_size=b_size // batch_count * zero_shot_num)
+    loader_train_domain    = DataLoader(dataset_train_domain,   num_workers=0, batch_size=f_size // batch_count * zero_shot_num)   
     
     print("Data generation completed")
 
@@ -164,21 +157,6 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                 input_f = input_f.to(device)
                 target_f = target_f.to(device)
 
-                # def closure():
-                #     optim.zero_grad()
-                #     loss_i = loss_func(target_i, model(input_i))
-                #     loss_b = loss_func(target_b, model(input_b))         
-                #     loss_f = model.calc_loss_f_burgers(input_f, target_f) if zero_shot else model.calc_loss_f_burgers(input_f, target_f, alpha=alpha)
-                #     loss = loss_i + loss_b + loss_f
-                #     train_loss_i += [loss_i.item()]
-                #     train_loss_b += [loss_b.item()]
-                #     train_loss_f += [loss_f.item()]
-                #     train_loss   += [loss.item()]
-                #     loss.backward()
-                #     return loss
-
-                # optim.step(closure)
-
                 optim.zero_grad()
                 loss_i = loss_func(target_i, model(input_i))
                 loss_b = loss_func(target_b, model(input_b))         
@@ -192,43 +170,30 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                 optim.step()
                 
             
-            # with torch.no_grad():
-            #     model.eval()
-            #     if loss_save > loss.item():
-            #         torch.save(model.state_dict(), 'burgers.data')
-            #         # print(".......model updated (epoch = ", epoch+1, ")")///
-            #         loss_save = loss.item()
-            
             if epoch % 100 == 99:
                 with torch.no_grad():
                     model.eval()
                     print("Epoch {0} | Loss_I: {1:.4f} | Loss_B: {2:.4f} | Loss_F: {3:.4f}".format(epoch + 1, np.mean(train_loss_i), np.mean(train_loss_b), np.mean(train_loss_f)))
-                    # if not zero_shot:
-                    #     nrmse = model.validate(alpha=alpha_list, beta=beta_list)
-                    #     print("NRMSE: {:.4f}".format(nrmse))
-                    #     nrmse_set.append(nrmse)
             
             if epoch % 100 == 99:
                 with torch.no_grad():
                     model.eval()
-                    # alpha_val, beta_val = sample_data(1, -1, 1), sample_data(1, -1, 1)
-                    # alpha_val_ood, beta_val_ood = sample_data(1, 1, 1.5), sample_data(1, 1, 1.5)
                     alpha_val = [0.01 / np.pi]
+                    alpha_val_ood = [0.2 / np.pi]
                     x = np.linspace(-1, 1, num=101).reshape(-1, 1)
                     t = np.linspace(0, 1, num=101).reshape(-1, 1)
                     x, t = np.meshgrid(x, t)
                     x = x.reshape(-1, 1)
                     t = t.reshape(-1, 1)
                     
-                    # loss_val = evaluate(x, alpha_val, beta_val, model, device)
                     loss_val = evaluate_burgers(x, t, alpha_val, model, device, zero_shot)
-                    # loss_val_ood = evaluate(x, alpha_val_ood, beta_val_ood, model, device)
+                    loss_val_ood = evaluate_burgers(x, t, alpha_val_ood, model, device, zero_shot)
 
                     val_loss += [loss_val]
-                    # val_ood_loss += [loss_val_ood]
-
+                    val_ood_loss += [loss_val_ood]
 
                     print("alpha: {}, Val. NRMSE: {:.3f} ".format(alpha_val, loss_val.item()))
+                    print("alpha: {}, Val. OOD NRMSE: {:.3f} ".format(alpha_val_ood, loss_val_ood.item()))
             
             if epoch % 1000 == 999:
                 with torch.no_grad():
@@ -249,7 +214,9 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                 input_f = input_f.to(device)
                 target_f = target_f.to(device)
 
-                
+                # print("Input",input_b[0])
+                # print("Pred", model(input_b)[0][0])
+                # print("Target", target_b[0][0])
                 loss_b = loss_func(target_b, model(input_b))
                 loss_f = 0
 
@@ -267,6 +234,7 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                 loss_f.to(device)
 
                 loss = loss_b * 10 + loss_f
+                # print("{:.3f}".format(loss.item()))
 
                 loss.backward()
 
@@ -276,20 +244,16 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                 train_loss_f += [loss_f.item()]
                 train_loss   += [loss.item()]
             
-            with torch.no_grad():
-                model.eval()
-                if loss_save > loss.item():
-                    torch.save(model.state_dict(), 'poisson.data')
-                    # print(".......model updated (epoch = ", epoch+1, ")")///
-                    loss_save = loss.item()
 
             if epoch % 50 == 49:
                 if zero_shot:
                     with torch.no_grad():
                         model.eval()
-                        alpha_val, beta_val = sample_data(1, -1, 1), sample_data(1, -1, 1)
-                        alpha_val_ood, beta_val_ood = sample_data(1, 1, 1.5), sample_data(1, 1, 1.5)
-                        x = np.linspace(-1, 1, num=100).reshape(-1, 1)
+                        alpha_val, beta_val = sample_data(200, -1, 1), sample_data(200, -1, 1)
+                        alpha_val_ood, beta_val_ood = sample_data(100, 1, 1.5), sample_data(100, 1, 1.5)
+                        alpha_val_ood.extend(sample_data(100, -1.5, -1))
+                        beta_val_ood.extend(sample_data(100, -1.5, -1))
+                        x = np.linspace(low, high, num=100).reshape(-1, 1)
                         
                         loss_val = evaluate(x, alpha_val, beta_val, model, device)
                         loss_val_ood = evaluate(x, alpha_val_ood, beta_val_ood, model, device)
@@ -297,7 +261,7 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                         val_loss += [loss_val]
                         val_ood_loss += [loss_val_ood]
 
-                        print("alpha, beta: {}, {} Val. NRMSE: {:.3f} | alpha, beta: {}, {} Val. OOD NRMSE: {:.3f}".format(alpha_val, beta_val, loss_val.item(), alpha_val_ood, beta_val_ood, loss_val_ood.item()))
+                        print("alpha, beta: {:.3f}, {:.3f} Val. NRMSE: {:.3f} | alpha, beta: {:.3f}, {:.3f} Val. OOD NRMSE: {:.3f}".format(alpha_val[0], beta_val[0], loss_val.item(), alpha_val_ood[0], beta_val_ood[0], loss_val_ood.item()))
                 
                     
 
@@ -310,6 +274,11 @@ def train(epochs=1000, lr=0.1, i_size=500, b_size=500, f_size=1000, load=False, 
                         nrmse = model.validate(alpha=alpha_list, beta=beta_list, low=low, high=high)
                         print("NRMSE: {:.4f}".format(nrmse))
                         nrmse_set.append(nrmse)
+            
+            if epoch % 1000 == 999:
+                with torch.no_grad():
+                    fname = 'models/poisson_zs_{}.data'.format(epoch + 1) if zero_shot else 'models/poisson_{}.data'
+                    torch.save(model.state_dict(), fname)
             
 
         

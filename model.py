@@ -6,6 +6,7 @@ import time
 
 from burgers import *
 
+import matplotlib.pyplot as plt
 
 from copy import copy
 
@@ -44,6 +45,8 @@ class PINN(nn.Module):
         self.module1 = nn.Sequential(*layers)
 
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
+        self.zero_shot = zero_shot
     
     def forward(self, input):
         # input      = torch.cat([x, t], axis=1)
@@ -116,15 +119,28 @@ class PINN(nn.Module):
 
         """
 
-        X = torch.Tensor(np.linspace(low, high, num=100).reshape(-1, 1)).to(self.device)
-        pred = self(X)
-        sol  = torch.sin(alpha * X) + torch.cos(beta * X) + 0.1 * X
-        loss_fn = torch.nn.MSELoss(reduction='sum')
-        nrmse = torch.sqrt(loss_fn(pred, sol) / torch.sum(X ** 2)).item()
+        x = np.linspace(low, high, num=100).reshape(-1, 1)
+        X = torch.tensor(x, dtype=torch.float32).to(self.device)
+        alpha_full = np.full((x.shape), alpha)
+        beta_full = np.full((x.shape), beta)
+        pred = self(torch.Tensor(np.hstack((x, alpha_full, beta_full))).to(self.device)).detach().cpu().numpy() if self.zero_shot else self(X).detach().cpu().numpy()
+        sol  = np.sin(alpha * x) + np.cos(beta * x) + 0.1 * x
+        nrmse = np.sqrt(np.sum((pred - sol) ** 2) / np.sum(pred ** 2))
+        # plt.cla()
+        # plt.scatter(x, sol, label='answer')
+        # plt.scatter(x, pred, label='pred')
+        # plt.legend()
+        # plt.savefig('test_{:.3f}.png'.format(nrmse))
 
         return nrmse
 
-    def validate_burgers(self, alpha, x_low=-1, x_high=1, t_low=0, t_high=1):
+    def get_burgers(self, alpha, vtn=101, vxn=101):
+        vx = np.linspace(-1, 1, vxn)
+        vt = np.linspace(0, 1, vtn)
+        truth = burgers_viscous_time_exact1(alpha, vxn, vx, vtn, vt).T.reshape(-1, 1)
+        return truth
+
+    def validate_burgers(self, model, alpha, truth, x_low=-1, x_high=1, t_low=0, t_high=1):
         """Validate the model via comparison between prediction and ground truth (mostly analytical solution).
 
         args:
@@ -143,9 +159,15 @@ class PINN(nn.Module):
         x, t = np.meshgrid(vx, vt)
         x = x.reshape(-1, 1)
         t = t.reshape(-1, 1)
-        pred = self(torch.Tensor(np.hstack((x, t))).to(self.device)).detach().cpu().numpy()
-        truth = burgers_viscous_time_exact1(alpha, vxn, vx, vtn, vt).T.reshape(-1, 1)
+        nu = np.full(x.shape, alpha)
+        pred = model(torch.Tensor(np.hstack((x, t, nu))).to(self.device)).detach().cpu().numpy() if self.zero_shot else model(torch.Tensor(np.hstack((x, t))).to(self.device)).detach().cpu().numpy()
         nrmse = np.sqrt( np.sum( (pred - truth) ** 2) / np.sum(pred ** 2))
+        # plt.cla()
+        # plt.scatter(x,t,c=pred)
+        # plt.savefig("pred{:.3f}.png".format(nrmse))
+        # plt.cla()
+        # plt.scatter(x,t,c=truth)
+        # plt.savefig("truth{:.3f}.png".format(nrmse))
         return nrmse
 
 if __name__ == "__main__":

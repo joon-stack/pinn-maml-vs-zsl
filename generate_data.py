@@ -169,22 +169,24 @@ def generate_task(size, ood=False):
     """
     tasks = []
     for _ in range(size):
-        # alpha_lb, alpha_rb = -1.0, 1.0
-        # beta_lb, beta_rb = -1.0, 1.0
+        alpha_lb, alpha_rb = -1.0, 1.0
+        beta_lb, beta_rb = -1.0, 1.0
         if ood:
             p = np.random.rand()
             alpha_qry_lb, alpha_qry_rb = (-1.5, -1.0) if p < 0.5 else (1.0, 1.5)
+            alpha_lb, alpha_rb = (-1.5, -1.0) if p < 0.5 else (1.0, 1.5)
             p = np.random.rand()
             beta_qry_lb, beta_qry_rb = (-1.5, -1.0) if p < 0.5 else (1.0, 1.5)
+            beta_lb, beta_rb = (-1.5, -1.0) if p < 0.5 else (1.0, 1.5)
         else:
             alpha_qry_lb, alpha_qry_rb = -1.0, 1.0
             beta_qry_lb, beta_qry_rb = -1.0, 1.0
             
-        # alpha_sup = lhs(1, alpha_lb, alpha_rb)
-        # beta_sup = lhs(1, beta_lb, beta_rb)
+        alpha_sup = lhs(1, alpha_lb, alpha_rb)
+        beta_sup = lhs(1, beta_lb, beta_rb)
         alpha_qry = lhs(1, alpha_qry_lb, alpha_qry_rb)
         beta_qry = lhs(1, beta_qry_lb, beta_qry_rb)
-        task = (alpha_qry, beta_qry)
+        task = ((alpha_sup, beta_sup), (alpha_qry, beta_qry))
         tasks.append(task)
     
     return tasks
@@ -201,18 +203,18 @@ def generate_task_burgers(size, ood=False, low=0.005/np.pi, high=0.1/np.pi):
     """
     tasks = []
     for _ in range(size):
-        # alpha_lb, alpha_rb = -1.0, 1.0
-        # beta_lb, beta_rb = -1.0, 1.0
+        alpha_lb, alpha_rb = low, high
         if ood:
             p = np.random.rand()
-            alpha_qry_lb, alpha_qry_rb = (-1.5, -1.0) if p < 0.5 else (1.0, 1.5)
+            alpha_qry_lb, alpha_qry_rb = (0.001/np.pi, 0.005/np.pi) if p < 0.5 else (0.1/np.pi, 0.2/np.pi)
+            alpha_lb, alpha_rb = (0.001/np.pi, 0.005/np.pi) if p < 0.5 else (0.1/np.pi, 0.2/np.pi)
         else:
             alpha_qry_lb, alpha_qry_rb = low, high
             
-        # alpha_sup = lhs(1, alpha_lb, alpha_rb)
+        alpha_sup = lhs(1, alpha_lb, alpha_rb)
         # beta_sup = lhs(1, beta_lb, beta_rb)
         alpha_qry = lhs(1, alpha_qry_lb, alpha_qry_rb)
-        task = (alpha_qry)
+        task = (alpha_sup, alpha_qry)
         tasks.append(task)
     
     return tasks

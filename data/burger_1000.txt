@@ -1,0 +1,411 @@
+Validation before training Pre-Adaptation (0.019)| Inner_loss_I: 0.4768 | Inner_loss_B: 0.0330 | Inner_loss_F: 0.0000 | Inner_loss: 0.5099 | NRMSE: 3.3646
+Validation before training (0.019)| Inner_loss_I: 0.4576 | Inner_loss_B: 0.0135 | Inner_loss_F: 0.0000 | Inner_loss: 0.4712 | NRMSE: 5.1256
+validation OOD before training Pre-Adaptation (0.001)| Inner_loss_I: 0.5019 |Inner_loss_B: 0.0330 | Inner_loss_F: 0.0000 | Inner_loss: 0.5349 | NRMSE: 3.3189
+validation OOD before training (0.001)| Inner_loss_I: 0.4882 |Inner_loss_B: 0.0150 | Inner_loss_F: 0.0000 | Inner_loss: 0.5032 | NRMSE: 4.8182
+Step 20 Pre-Adapt | Inner_loss_I: 0.4852 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0001 | Inner_loss: 0.4866
+Step 20 Post-Adapt | Inner_loss_I: 0.3136 | Inner_loss_B: 0.0191 | Inner_loss_F: 0.0001 | Inner_loss: 0.3329
+Step 40 Pre-Adapt | Inner_loss_I: 0.4243 | Inner_loss_B: 0.0128 | Inner_loss_F: 0.0006 | Inner_loss: 0.4377
+Step 40 Post-Adapt | Inner_loss_I: 0.2661 | Inner_loss_B: 0.0304 | Inner_loss_F: 0.0010 | Inner_loss: 0.2974
+Step 60 Pre-Adapt | Inner_loss_I: 0.3345 | Inner_loss_B: 0.0741 | Inner_loss_F: 0.0034 | Inner_loss: 0.4120
+Step 60 Post-Adapt | Inner_loss_I: 0.1992 | Inner_loss_B: 0.0862 | Inner_loss_F: 0.0040 | Inner_loss: 0.2894
+Step 80 Pre-Adapt | Inner_loss_I: 0.3397 | Inner_loss_B: 0.0565 | Inner_loss_F: 0.0033 | Inner_loss: 0.3994
+Step 80 Post-Adapt | Inner_loss_I: 0.2143 | Inner_loss_B: 0.0686 | Inner_loss_F: 0.0037 | Inner_loss: 0.2865
+Model saved
+Step 100 Pre-Adapt | Inner_loss_I: 0.3000 | Inner_loss_B: 0.0721 | Inner_loss_F: 0.0036 | Inner_loss: 0.3757
+Step 100 Post-Adapt | Inner_loss_I: 0.1930 | Inner_loss_B: 0.0801 | Inner_loss_F: 0.0039 | Inner_loss: 0.2770
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.2967 |Inner_loss_B: 0.0722 | Inner_loss_F: 0.0037 | Inner_loss: 0.3726 | NRMSE: 2.6399
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.2949 |Inner_loss_B: 0.0724 | Inner_loss_F: 0.0036 | Inner_loss: 0.3709 | NRMSE: 2.6225
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.3022 |Inner_loss_B: 0.0723 | Inner_loss_F: 0.0034 | Inner_loss: 0.3779 | NRMSE: 2.5881
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.3143 |Inner_loss_B: 0.0740 | Inner_loss_F: 0.0034 | Inner_loss: 0.3917 | NRMSE: 2.5414
+Step 120 Pre-Adapt | Inner_loss_I: 0.2810 | Inner_loss_B: 0.0784 | Inner_loss_F: 0.0028 | Inner_loss: 0.3622
+Step 120 Post-Adapt | Inner_loss_I: 0.1793 | Inner_loss_B: 0.0869 | Inner_loss_F: 0.0031 | Inner_loss: 0.2693
+Step 140 Pre-Adapt | Inner_loss_I: 0.2177 | Inner_loss_B: 0.0859 | Inner_loss_F: 0.0024 | Inner_loss: 0.3060
+Step 140 Post-Adapt | Inner_loss_I: 0.1354 | Inner_loss_B: 0.0909 | Inner_loss_F: 0.0026 | Inner_loss: 0.2289
+Step 160 Pre-Adapt | Inner_loss_I: 0.1986 | Inner_loss_B: 0.0822 | Inner_loss_F: 0.0046 | Inner_loss: 0.2854
+Step 160 Post-Adapt | Inner_loss_I: 0.1197 | Inner_loss_B: 0.0896 | Inner_loss_F: 0.0023 | Inner_loss: 0.2116
+Step 180 Pre-Adapt | Inner_loss_I: 0.1707 | Inner_loss_B: 0.0666 | Inner_loss_F: 0.0117 | Inner_loss: 0.2489
+Step 180 Post-Adapt | Inner_loss_I: 0.0965 | Inner_loss_B: 0.0725 | Inner_loss_F: 0.0049 | Inner_loss: 0.1739
+Model saved
+Step 200 Pre-Adapt | Inner_loss_I: 0.1727 | Inner_loss_B: 0.0517 | Inner_loss_F: 0.0171 | Inner_loss: 0.2415
+Step 200 Post-Adapt | Inner_loss_I: 0.0913 | Inner_loss_B: 0.0623 | Inner_loss_F: 0.0076 | Inner_loss: 0.1612
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.1685 |Inner_loss_B: 0.0477 | Inner_loss_F: 0.0179 | Inner_loss: 0.2341 | NRMSE: 1.0434
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.1647 |Inner_loss_B: 0.0488 | Inner_loss_F: 0.0186 | Inner_loss: 0.2321 | NRMSE: 1.0250
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.1686 |Inner_loss_B: 0.0476 | Inner_loss_F: 0.0355 | Inner_loss: 0.2517 | NRMSE: 1.0254
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.1692 |Inner_loss_B: 0.0524 | Inner_loss_F: 0.0318 | Inner_loss: 0.2534 | NRMSE: 0.9962
+Step 220 Pre-Adapt | Inner_loss_I: 0.1567 | Inner_loss_B: 0.0303 | Inner_loss_F: 0.0196 | Inner_loss: 0.2065
+Step 220 Post-Adapt | Inner_loss_I: 0.0741 | Inner_loss_B: 0.0427 | Inner_loss_F: 0.0081 | Inner_loss: 0.1249
+Step 240 Pre-Adapt | Inner_loss_I: 0.1353 | Inner_loss_B: 0.0141 | Inner_loss_F: 0.0203 | Inner_loss: 0.1696
+Step 240 Post-Adapt | Inner_loss_I: 0.0504 | Inner_loss_B: 0.0275 | Inner_loss_F: 0.0065 | Inner_loss: 0.0845
+Step 260 Pre-Adapt | Inner_loss_I: 0.1085 | Inner_loss_B: 0.0056 | Inner_loss_F: 0.0321 | Inner_loss: 0.1462
+Step 260 Post-Adapt | Inner_loss_I: 0.0309 | Inner_loss_B: 0.0175 | Inner_loss_F: 0.0084 | Inner_loss: 0.0568
+Step 280 Pre-Adapt | Inner_loss_I: 0.1034 | Inner_loss_B: 0.0099 | Inner_loss_F: 0.0308 | Inner_loss: 0.1440
+Step 280 Post-Adapt | Inner_loss_I: 0.0360 | Inner_loss_B: 0.0187 | Inner_loss_F: 0.0092 | Inner_loss: 0.0640
+Model saved
+Step 300 Pre-Adapt | Inner_loss_I: 0.0832 | Inner_loss_B: 0.0111 | Inner_loss_F: 0.0328 | Inner_loss: 0.1270
+Step 300 Post-Adapt | Inner_loss_I: 0.0295 | Inner_loss_B: 0.0162 | Inner_loss_F: 0.0075 | Inner_loss: 0.0532
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0801 |Inner_loss_B: 0.0102 | Inner_loss_F: 0.0380 | Inner_loss: 0.1284 | NRMSE: 0.8040
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0756 |Inner_loss_B: 0.0107 | Inner_loss_F: 0.0392 | Inner_loss: 0.1255 | NRMSE: 0.7706
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0912 |Inner_loss_B: 0.0116 | Inner_loss_F: 0.0513 | Inner_loss: 0.1542 | NRMSE: 0.7865
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0774 |Inner_loss_B: 0.0136 | Inner_loss_F: 0.0466 | Inner_loss: 0.1376 | NRMSE: 0.7549
+Step 320 Pre-Adapt | Inner_loss_I: 0.0828 | Inner_loss_B: 0.0093 | Inner_loss_F: 0.0384 | Inner_loss: 0.1305
+Step 320 Post-Adapt | Inner_loss_I: 0.0305 | Inner_loss_B: 0.0145 | Inner_loss_F: 0.0097 | Inner_loss: 0.0548
+Step 340 Pre-Adapt | Inner_loss_I: 0.0725 | Inner_loss_B: 0.0116 | Inner_loss_F: 0.0324 | Inner_loss: 0.1164
+Step 340 Post-Adapt | Inner_loss_I: 0.0291 | Inner_loss_B: 0.0143 | Inner_loss_F: 0.0097 | Inner_loss: 0.0531
+Step 360 Pre-Adapt | Inner_loss_I: 0.0784 | Inner_loss_B: 0.0085 | Inner_loss_F: 0.0342 | Inner_loss: 0.1211
+Step 360 Post-Adapt | Inner_loss_I: 0.0292 | Inner_loss_B: 0.0124 | Inner_loss_F: 0.0089 | Inner_loss: 0.0505
+Step 380 Pre-Adapt | Inner_loss_I: 0.0735 | Inner_loss_B: 0.0078 | Inner_loss_F: 0.0361 | Inner_loss: 0.1175
+Step 380 Post-Adapt | Inner_loss_I: 0.0283 | Inner_loss_B: 0.0112 | Inner_loss_F: 0.0105 | Inner_loss: 0.0500
+Model saved
+Step 400 Pre-Adapt | Inner_loss_I: 0.0715 | Inner_loss_B: 0.0090 | Inner_loss_F: 0.0335 | Inner_loss: 0.1141
+Step 400 Post-Adapt | Inner_loss_I: 0.0295 | Inner_loss_B: 0.0112 | Inner_loss_F: 0.0094 | Inner_loss: 0.0501
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0720 |Inner_loss_B: 0.0095 | Inner_loss_F: 0.0372 | Inner_loss: 0.1187 | NRMSE: 0.6859
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0671 |Inner_loss_B: 0.0104 | Inner_loss_F: 0.0386 | Inner_loss: 0.1161 | NRMSE: 0.6569
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0703 |Inner_loss_B: 0.0088 | Inner_loss_F: 0.0592 | Inner_loss: 0.1383 | NRMSE: 0.6717
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0669 |Inner_loss_B: 0.0122 | Inner_loss_F: 0.0540 | Inner_loss: 0.1331 | NRMSE: 0.6401
+Step 420 Pre-Adapt | Inner_loss_I: 0.0672 | Inner_loss_B: 0.0099 | Inner_loss_F: 0.0319 | Inner_loss: 0.1090
+Step 420 Post-Adapt | Inner_loss_I: 0.0263 | Inner_loss_B: 0.0111 | Inner_loss_F: 0.0090 | Inner_loss: 0.0464
+Step 440 Pre-Adapt | Inner_loss_I: 0.0690 | Inner_loss_B: 0.0116 | Inner_loss_F: 0.0306 | Inner_loss: 0.1112
+Step 440 Post-Adapt | Inner_loss_I: 0.0271 | Inner_loss_B: 0.0118 | Inner_loss_F: 0.0088 | Inner_loss: 0.0477
+Step 460 Pre-Adapt | Inner_loss_I: 0.0639 | Inner_loss_B: 0.0091 | Inner_loss_F: 0.0329 | Inner_loss: 0.1059
+Step 460 Post-Adapt | Inner_loss_I: 0.0248 | Inner_loss_B: 0.0101 | Inner_loss_F: 0.0087 | Inner_loss: 0.0436
+Step 480 Pre-Adapt | Inner_loss_I: 0.0639 | Inner_loss_B: 0.0083 | Inner_loss_F: 0.0306 | Inner_loss: 0.1027
+Step 480 Post-Adapt | Inner_loss_I: 0.0255 | Inner_loss_B: 0.0095 | Inner_loss_F: 0.0077 | Inner_loss: 0.0427
+Model saved
+Step 500 Pre-Adapt | Inner_loss_I: 0.0632 | Inner_loss_B: 0.0105 | Inner_loss_F: 0.0297 | Inner_loss: 0.1035
+Step 500 Post-Adapt | Inner_loss_I: 0.0259 | Inner_loss_B: 0.0102 | Inner_loss_F: 0.0080 | Inner_loss: 0.0441
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0651 |Inner_loss_B: 0.0107 | Inner_loss_F: 0.0323 | Inner_loss: 0.1080 | NRMSE: 0.6011
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0601 |Inner_loss_B: 0.0095 | Inner_loss_F: 0.0348 | Inner_loss: 0.1043 | NRMSE: 0.5788
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0644 |Inner_loss_B: 0.0102 | Inner_loss_F: 0.0708 | Inner_loss: 0.1455 | NRMSE: 0.5893
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0623 |Inner_loss_B: 0.0119 | Inner_loss_F: 0.0618 | Inner_loss: 0.1360 | NRMSE: 0.5848
+Step 520 Pre-Adapt | Inner_loss_I: 0.0642 | Inner_loss_B: 0.0091 | Inner_loss_F: 0.0294 | Inner_loss: 0.1027
+Step 520 Post-Adapt | Inner_loss_I: 0.0253 | Inner_loss_B: 0.0094 | Inner_loss_F: 0.0069 | Inner_loss: 0.0416
+Step 540 Pre-Adapt | Inner_loss_I: 0.0557 | Inner_loss_B: 0.0090 | Inner_loss_F: 0.0386 | Inner_loss: 0.1033
+Step 540 Post-Adapt | Inner_loss_I: 0.0235 | Inner_loss_B: 0.0085 | Inner_loss_F: 0.0068 | Inner_loss: 0.0389
+Step 560 Pre-Adapt | Inner_loss_I: 0.0601 | Inner_loss_B: 0.0086 | Inner_loss_F: 0.0311 | Inner_loss: 0.0997
+Step 560 Post-Adapt | Inner_loss_I: 0.0237 | Inner_loss_B: 0.0086 | Inner_loss_F: 0.0069 | Inner_loss: 0.0392
+Step 580 Pre-Adapt | Inner_loss_I: 0.0622 | Inner_loss_B: 0.0060 | Inner_loss_F: 0.0327 | Inner_loss: 0.1009
+Step 580 Post-Adapt | Inner_loss_I: 0.0254 | Inner_loss_B: 0.0071 | Inner_loss_F: 0.0065 | Inner_loss: 0.0390
+Model saved
+Step 600 Pre-Adapt | Inner_loss_I: 0.0547 | Inner_loss_B: 0.0093 | Inner_loss_F: 0.0283 | Inner_loss: 0.0922
+Step 600 Post-Adapt | Inner_loss_I: 0.0219 | Inner_loss_B: 0.0074 | Inner_loss_F: 0.0066 | Inner_loss: 0.0360
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0575 |Inner_loss_B: 0.0078 | Inner_loss_F: 0.0303 | Inner_loss: 0.0955 | NRMSE: 0.5438
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0530 |Inner_loss_B: 0.0062 | Inner_loss_F: 0.0328 | Inner_loss: 0.0921 | NRMSE: 0.5268
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0544 |Inner_loss_B: 0.0082 | Inner_loss_F: 0.0804 | Inner_loss: 0.1430 | NRMSE: 0.5351
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0555 |Inner_loss_B: 0.0084 | Inner_loss_F: 0.0627 | Inner_loss: 0.1266 | NRMSE: 0.5400
+Step 620 Pre-Adapt | Inner_loss_I: 0.0534 | Inner_loss_B: 0.0050 | Inner_loss_F: 0.0322 | Inner_loss: 0.0906
+Step 620 Post-Adapt | Inner_loss_I: 0.0218 | Inner_loss_B: 0.0059 | Inner_loss_F: 0.0058 | Inner_loss: 0.0336
+Step 640 Pre-Adapt | Inner_loss_I: 0.0530 | Inner_loss_B: 0.0052 | Inner_loss_F: 0.0290 | Inner_loss: 0.0872
+Step 640 Post-Adapt | Inner_loss_I: 0.0214 | Inner_loss_B: 0.0054 | Inner_loss_F: 0.0057 | Inner_loss: 0.0324
+Step 660 Pre-Adapt | Inner_loss_I: 0.0544 | Inner_loss_B: 0.0052 | Inner_loss_F: 0.0293 | Inner_loss: 0.0889
+Step 660 Post-Adapt | Inner_loss_I: 0.0231 | Inner_loss_B: 0.0050 | Inner_loss_F: 0.0054 | Inner_loss: 0.0336
+Step 680 Pre-Adapt | Inner_loss_I: 0.0497 | Inner_loss_B: 0.0038 | Inner_loss_F: 0.0302 | Inner_loss: 0.0837
+Step 680 Post-Adapt | Inner_loss_I: 0.0205 | Inner_loss_B: 0.0046 | Inner_loss_F: 0.0049 | Inner_loss: 0.0299
+Model saved
+Step 700 Pre-Adapt | Inner_loss_I: 0.0495 | Inner_loss_B: 0.0057 | Inner_loss_F: 0.0282 | Inner_loss: 0.0834
+Step 700 Post-Adapt | Inner_loss_I: 0.0195 | Inner_loss_B: 0.0047 | Inner_loss_F: 0.0056 | Inner_loss: 0.0298
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0505 |Inner_loss_B: 0.0061 | Inner_loss_F: 0.0292 | Inner_loss: 0.0858 | NRMSE: 0.4998
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0469 |Inner_loss_B: 0.0039 | Inner_loss_F: 0.0297 | Inner_loss: 0.0805 | NRMSE: 0.4931
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0486 |Inner_loss_B: 0.0059 | Inner_loss_F: 0.0850 | Inner_loss: 0.1395 | NRMSE: 0.4919
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0495 |Inner_loss_B: 0.0058 | Inner_loss_F: 0.0653 | Inner_loss: 0.1206 | NRMSE: 0.5147
+Step 720 Pre-Adapt | Inner_loss_I: 0.0491 | Inner_loss_B: 0.0041 | Inner_loss_F: 0.0274 | Inner_loss: 0.0806
+Step 720 Post-Adapt | Inner_loss_I: 0.0198 | Inner_loss_B: 0.0038 | Inner_loss_F: 0.0047 | Inner_loss: 0.0283
+Step 740 Pre-Adapt | Inner_loss_I: 0.0450 | Inner_loss_B: 0.0028 | Inner_loss_F: 0.0284 | Inner_loss: 0.0762
+Step 740 Post-Adapt | Inner_loss_I: 0.0179 | Inner_loss_B: 0.0033 | Inner_loss_F: 0.0049 | Inner_loss: 0.0261
+Step 760 Pre-Adapt | Inner_loss_I: 0.0442 | Inner_loss_B: 0.0032 | Inner_loss_F: 0.0279 | Inner_loss: 0.0753
+Step 760 Post-Adapt | Inner_loss_I: 0.0171 | Inner_loss_B: 0.0034 | Inner_loss_F: 0.0045 | Inner_loss: 0.0250
+Step 780 Pre-Adapt | Inner_loss_I: 0.0443 | Inner_loss_B: 0.0027 | Inner_loss_F: 0.0257 | Inner_loss: 0.0726
+Step 780 Post-Adapt | Inner_loss_I: 0.0174 | Inner_loss_B: 0.0030 | Inner_loss_F: 0.0066 | Inner_loss: 0.0271
+Model saved
+Step 800 Pre-Adapt | Inner_loss_I: 0.0402 | Inner_loss_B: 0.0030 | Inner_loss_F: 0.0275 | Inner_loss: 0.0707
+Step 800 Post-Adapt | Inner_loss_I: 0.0164 | Inner_loss_B: 0.0031 | Inner_loss_F: 0.0056 | Inner_loss: 0.0252
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0406 |Inner_loss_B: 0.0031 | Inner_loss_F: 0.0283 | Inner_loss: 0.0720 | NRMSE: 0.4680
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0386 |Inner_loss_B: 0.0022 | Inner_loss_F: 0.0281 | Inner_loss: 0.0689 | NRMSE: 0.4598
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0406 |Inner_loss_B: 0.0030 | Inner_loss_F: 0.0981 | Inner_loss: 0.1417 | NRMSE: 0.4610
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0450 |Inner_loss_B: 0.0045 | Inner_loss_F: 0.0714 | Inner_loss: 0.1209 | NRMSE: 0.4907
+Step 820 Pre-Adapt | Inner_loss_I: 0.0430 | Inner_loss_B: 0.0034 | Inner_loss_F: 0.0272 | Inner_loss: 0.0736
+Step 820 Post-Adapt | Inner_loss_I: 0.0172 | Inner_loss_B: 0.0032 | Inner_loss_F: 0.0043 | Inner_loss: 0.0247
+Step 840 Pre-Adapt | Inner_loss_I: 0.0400 | Inner_loss_B: 0.0022 | Inner_loss_F: 0.0306 | Inner_loss: 0.0728
+Step 840 Post-Adapt | Inner_loss_I: 0.0169 | Inner_loss_B: 0.0027 | Inner_loss_F: 0.0051 | Inner_loss: 0.0247
+Step 860 Pre-Adapt | Inner_loss_I: 0.0426 | Inner_loss_B: 0.0032 | Inner_loss_F: 0.0276 | Inner_loss: 0.0734
+Step 860 Post-Adapt | Inner_loss_I: 0.0157 | Inner_loss_B: 0.0031 | Inner_loss_F: 0.0046 | Inner_loss: 0.0234
+Step 880 Pre-Adapt | Inner_loss_I: 0.0419 | Inner_loss_B: 0.0024 | Inner_loss_F: 0.0271 | Inner_loss: 0.0714
+Step 880 Post-Adapt | Inner_loss_I: 0.0162 | Inner_loss_B: 0.0029 | Inner_loss_F: 0.0041 | Inner_loss: 0.0231
+Model saved
+Step 900 Pre-Adapt | Inner_loss_I: 0.0398 | Inner_loss_B: 0.0015 | Inner_loss_F: 0.0302 | Inner_loss: 0.0715
+Step 900 Post-Adapt | Inner_loss_I: 0.0160 | Inner_loss_B: 0.0023 | Inner_loss_F: 0.0051 | Inner_loss: 0.0234
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0380 |Inner_loss_B: 0.0017 | Inner_loss_F: 0.0289 | Inner_loss: 0.0686 | NRMSE: 0.4786
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0371 |Inner_loss_B: 0.0010 | Inner_loss_F: 0.0281 | Inner_loss: 0.0662 | NRMSE: 0.4755
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0427 |Inner_loss_B: 0.0017 | Inner_loss_F: 0.1044 | Inner_loss: 0.1487 | NRMSE: 0.4738
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0433 |Inner_loss_B: 0.0035 | Inner_loss_F: 0.0703 | Inner_loss: 0.1171 | NRMSE: 0.5010
+Step 920 Pre-Adapt | Inner_loss_I: 0.0388 | Inner_loss_B: 0.0020 | Inner_loss_F: 0.0278 | Inner_loss: 0.0687
+Step 920 Post-Adapt | Inner_loss_I: 0.0161 | Inner_loss_B: 0.0024 | Inner_loss_F: 0.0048 | Inner_loss: 0.0233
+Step 940 Pre-Adapt | Inner_loss_I: 0.0394 | Inner_loss_B: 0.0019 | Inner_loss_F: 0.0272 | Inner_loss: 0.0685
+Step 940 Post-Adapt | Inner_loss_I: 0.0149 | Inner_loss_B: 0.0021 | Inner_loss_F: 0.0049 | Inner_loss: 0.0219
+Step 960 Pre-Adapt | Inner_loss_I: 0.0365 | Inner_loss_B: 0.0020 | Inner_loss_F: 0.0327 | Inner_loss: 0.0712
+Step 960 Post-Adapt | Inner_loss_I: 0.0150 | Inner_loss_B: 0.0025 | Inner_loss_F: 0.0058 | Inner_loss: 0.0233
+Step 980 Pre-Adapt | Inner_loss_I: 0.0375 | Inner_loss_B: 0.0016 | Inner_loss_F: 0.0269 | Inner_loss: 0.0660
+Step 980 Post-Adapt | Inner_loss_I: 0.0143 | Inner_loss_B: 0.0019 | Inner_loss_F: 0.0046 | Inner_loss: 0.0208
+Model saved
+Step 1000 Pre-Adapt | Inner_loss_I: 0.0359 | Inner_loss_B: 0.0016 | Inner_loss_F: 0.0264 | Inner_loss: 0.0639
+Step 1000 Post-Adapt | Inner_loss_I: 0.0140 | Inner_loss_B: 0.0025 | Inner_loss_F: 0.0052 | Inner_loss: 0.0217
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0355 |Inner_loss_B: 0.0019 | Inner_loss_F: 0.0276 | Inner_loss: 0.0650 | NRMSE: 0.4471
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0332 |Inner_loss_B: 0.0013 | Inner_loss_F: 0.0265 | Inner_loss: 0.0609 | NRMSE: 0.4395
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0366 |Inner_loss_B: 0.0019 | Inner_loss_F: 0.1269 | Inner_loss: 0.1654 | NRMSE: 0.4420
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0394 |Inner_loss_B: 0.0038 | Inner_loss_F: 0.0768 | Inner_loss: 0.1200 | NRMSE: 0.4831
+Step 1020 Pre-Adapt | Inner_loss_I: 0.0374 | Inner_loss_B: 0.0025 | Inner_loss_F: 0.0339 | Inner_loss: 0.0737
+Step 1020 Post-Adapt | Inner_loss_I: 0.0162 | Inner_loss_B: 0.0023 | Inner_loss_F: 0.0059 | Inner_loss: 0.0245
+Step 1040 Pre-Adapt | Inner_loss_I: 0.0399 | Inner_loss_B: 0.0027 | Inner_loss_F: 0.0319 | Inner_loss: 0.0745
+Step 1040 Post-Adapt | Inner_loss_I: 0.0157 | Inner_loss_B: 0.0022 | Inner_loss_F: 0.0044 | Inner_loss: 0.0223
+Step 1060 Pre-Adapt | Inner_loss_I: 0.0355 | Inner_loss_B: 0.0021 | Inner_loss_F: 0.0243 | Inner_loss: 0.0618
+Step 1060 Post-Adapt | Inner_loss_I: 0.0133 | Inner_loss_B: 0.0019 | Inner_loss_F: 0.0053 | Inner_loss: 0.0206
+Step 1080 Pre-Adapt | Inner_loss_I: 0.0343 | Inner_loss_B: 0.0016 | Inner_loss_F: 0.0311 | Inner_loss: 0.0671
+Step 1080 Post-Adapt | Inner_loss_I: 0.0138 | Inner_loss_B: 0.0026 | Inner_loss_F: 0.0062 | Inner_loss: 0.0226
+Model saved
+Step 1100 Pre-Adapt | Inner_loss_I: 0.0320 | Inner_loss_B: 0.0018 | Inner_loss_F: 0.0308 | Inner_loss: 0.0646
+Step 1100 Post-Adapt | Inner_loss_I: 0.0146 | Inner_loss_B: 0.0021 | Inner_loss_F: 0.0049 | Inner_loss: 0.0216
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0335 |Inner_loss_B: 0.0019 | Inner_loss_F: 0.0295 | Inner_loss: 0.0649 | NRMSE: 0.4168
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0321 |Inner_loss_B: 0.0008 | Inner_loss_F: 0.0279 | Inner_loss: 0.0608 | NRMSE: 0.4148
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0314 |Inner_loss_B: 0.0018 | Inner_loss_F: 0.1343 | Inner_loss: 0.1675 | NRMSE: 0.4146
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0391 |Inner_loss_B: 0.0032 | Inner_loss_F: 0.0833 | Inner_loss: 0.1257 | NRMSE: 0.4607
+Step 1120 Pre-Adapt | Inner_loss_I: 0.0326 | Inner_loss_B: 0.0031 | Inner_loss_F: 0.0274 | Inner_loss: 0.0630
+Step 1120 Post-Adapt | Inner_loss_I: 0.0139 | Inner_loss_B: 0.0019 | Inner_loss_F: 0.0070 | Inner_loss: 0.0229
+Step 1140 Pre-Adapt | Inner_loss_I: 0.0379 | Inner_loss_B: 0.0008 | Inner_loss_F: 0.0292 | Inner_loss: 0.0680
+Step 1140 Post-Adapt | Inner_loss_I: 0.0157 | Inner_loss_B: 0.0020 | Inner_loss_F: 0.0046 | Inner_loss: 0.0224
+Step 1160 Pre-Adapt | Inner_loss_I: 0.0389 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0298 | Inner_loss: 0.0694
+Step 1160 Post-Adapt | Inner_loss_I: 0.0150 | Inner_loss_B: 0.0017 | Inner_loss_F: 0.0058 | Inner_loss: 0.0225
+Step 1180 Pre-Adapt | Inner_loss_I: 0.0338 | Inner_loss_B: 0.0024 | Inner_loss_F: 0.0333 | Inner_loss: 0.0695
+Step 1180 Post-Adapt | Inner_loss_I: 0.0141 | Inner_loss_B: 0.0019 | Inner_loss_F: 0.0044 | Inner_loss: 0.0204
+Model saved
+Step 1200 Pre-Adapt | Inner_loss_I: 0.0388 | Inner_loss_B: 0.0020 | Inner_loss_F: 0.0270 | Inner_loss: 0.0677
+Step 1200 Post-Adapt | Inner_loss_I: 0.0150 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0056 | Inner_loss: 0.0220
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0355 |Inner_loss_B: 0.0015 | Inner_loss_F: 0.0261 | Inner_loss: 0.0631 | NRMSE: 0.4410
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0334 |Inner_loss_B: 0.0006 | Inner_loss_F: 0.0265 | Inner_loss: 0.0605 | NRMSE: 0.4328
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0356 |Inner_loss_B: 0.0017 | Inner_loss_F: 0.1034 | Inner_loss: 0.1407 | NRMSE: 0.4365
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0387 |Inner_loss_B: 0.0025 | Inner_loss_F: 0.0736 | Inner_loss: 0.1148 | NRMSE: 0.4686
+Step 1220 Pre-Adapt | Inner_loss_I: 0.0371 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0298 | Inner_loss: 0.0676
+Step 1220 Post-Adapt | Inner_loss_I: 0.0145 | Inner_loss_B: 0.0017 | Inner_loss_F: 0.0042 | Inner_loss: 0.0204
+Step 1240 Pre-Adapt | Inner_loss_I: 0.0333 | Inner_loss_B: 0.0011 | Inner_loss_F: 0.0255 | Inner_loss: 0.0600
+Step 1240 Post-Adapt | Inner_loss_I: 0.0123 | Inner_loss_B: 0.0017 | Inner_loss_F: 0.0044 | Inner_loss: 0.0184
+Step 1260 Pre-Adapt | Inner_loss_I: 0.0351 | Inner_loss_B: 0.0004 | Inner_loss_F: 0.0319 | Inner_loss: 0.0674
+Step 1260 Post-Adapt | Inner_loss_I: 0.0151 | Inner_loss_B: 0.0023 | Inner_loss_F: 0.0045 | Inner_loss: 0.0218
+Step 1280 Pre-Adapt | Inner_loss_I: 0.0321 | Inner_loss_B: 0.0002 | Inner_loss_F: 0.0313 | Inner_loss: 0.0636
+Step 1280 Post-Adapt | Inner_loss_I: 0.0137 | Inner_loss_B: 0.0015 | Inner_loss_F: 0.0038 | Inner_loss: 0.0190
+Model saved
+Step 1300 Pre-Adapt | Inner_loss_I: 0.0364 | Inner_loss_B: 0.0002 | Inner_loss_F: 0.0297 | Inner_loss: 0.0663
+Step 1300 Post-Adapt | Inner_loss_I: 0.0140 | Inner_loss_B: 0.0015 | Inner_loss_F: 0.0041 | Inner_loss: 0.0195
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0362 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0270 | Inner_loss: 0.0635 | NRMSE: 0.4640
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0327 |Inner_loss_B: 0.0006 | Inner_loss_F: 0.0264 | Inner_loss: 0.0597 | NRMSE: 0.4422
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0370 |Inner_loss_B: 0.0004 | Inner_loss_F: 0.1362 | Inner_loss: 0.1736 | NRMSE: 0.4580
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0368 |Inner_loss_B: 0.0024 | Inner_loss_F: 0.0702 | Inner_loss: 0.1095 | NRMSE: 0.4789
+Step 1320 Pre-Adapt | Inner_loss_I: 0.0347 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0283 | Inner_loss: 0.0639
+Step 1320 Post-Adapt | Inner_loss_I: 0.0133 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0048 | Inner_loss: 0.0195
+Step 1340 Pre-Adapt | Inner_loss_I: 0.0336 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0283 | Inner_loss: 0.0627
+Step 1340 Post-Adapt | Inner_loss_I: 0.0135 | Inner_loss_B: 0.0018 | Inner_loss_F: 0.0039 | Inner_loss: 0.0193
+Step 1360 Pre-Adapt | Inner_loss_I: 0.0344 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0251 | Inner_loss: 0.0601
+Step 1360 Post-Adapt | Inner_loss_I: 0.0136 | Inner_loss_B: 0.0019 | Inner_loss_F: 0.0047 | Inner_loss: 0.0202
+Step 1380 Pre-Adapt | Inner_loss_I: 0.0331 | Inner_loss_B: 0.0017 | Inner_loss_F: 0.0357 | Inner_loss: 0.0705
+Step 1380 Post-Adapt | Inner_loss_I: 0.0130 | Inner_loss_B: 0.0016 | Inner_loss_F: 0.0043 | Inner_loss: 0.0190
+Model saved
+Step 1400 Pre-Adapt | Inner_loss_I: 0.0364 | Inner_loss_B: 0.0004 | Inner_loss_F: 0.0259 | Inner_loss: 0.0628
+Step 1400 Post-Adapt | Inner_loss_I: 0.0143 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0044 | Inner_loss: 0.0199
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0332 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0262 | Inner_loss: 0.0597 | NRMSE: 0.4413
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0310 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0258 | Inner_loss: 0.0571 | NRMSE: 0.4262
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0330 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.1045 | Inner_loss: 0.1378 | NRMSE: 0.4369
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0386 |Inner_loss_B: 0.0018 | Inner_loss_F: 0.0741 | Inner_loss: 0.1145 | NRMSE: 0.4702
+Step 1420 Pre-Adapt | Inner_loss_I: 0.0327 | Inner_loss_B: 0.0019 | Inner_loss_F: 0.0266 | Inner_loss: 0.0612
+Step 1420 Post-Adapt | Inner_loss_I: 0.0127 | Inner_loss_B: 0.0016 | Inner_loss_F: 0.0044 | Inner_loss: 0.0186
+Step 1440 Pre-Adapt | Inner_loss_I: 0.0355 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0254 | Inner_loss: 0.0616
+Step 1440 Post-Adapt | Inner_loss_I: 0.0140 | Inner_loss_B: 0.0013 | Inner_loss_F: 0.0041 | Inner_loss: 0.0194
+Step 1460 Pre-Adapt | Inner_loss_I: 0.0342 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0245 | Inner_loss: 0.0593
+Step 1460 Post-Adapt | Inner_loss_I: 0.0133 | Inner_loss_B: 0.0016 | Inner_loss_F: 0.0044 | Inner_loss: 0.0193
+Step 1480 Pre-Adapt | Inner_loss_I: 0.0339 | Inner_loss_B: 0.0020 | Inner_loss_F: 0.0253 | Inner_loss: 0.0611
+Step 1480 Post-Adapt | Inner_loss_I: 0.0139 | Inner_loss_B: 0.0016 | Inner_loss_F: 0.0042 | Inner_loss: 0.0197
+Model saved
+Step 1500 Pre-Adapt | Inner_loss_I: 0.0366 | Inner_loss_B: 0.0001 | Inner_loss_F: 0.0244 | Inner_loss: 0.0611
+Step 1500 Post-Adapt | Inner_loss_I: 0.0143 | Inner_loss_B: 0.0013 | Inner_loss_F: 0.0043 | Inner_loss: 0.0199
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0355 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.0253 | Inner_loss: 0.0610 | NRMSE: 0.4614
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0320 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0256 | Inner_loss: 0.0580 | NRMSE: 0.4374
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0377 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.1063 | Inner_loss: 0.1441 | NRMSE: 0.4555
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0387 |Inner_loss_B: 0.0017 | Inner_loss_F: 0.0736 | Inner_loss: 0.1139 | NRMSE: 0.4756
+Step 1520 Pre-Adapt | Inner_loss_I: 0.0328 | Inner_loss_B: 0.0008 | Inner_loss_F: 0.0378 | Inner_loss: 0.0713
+Step 1520 Post-Adapt | Inner_loss_I: 0.0144 | Inner_loss_B: 0.0018 | Inner_loss_F: 0.0053 | Inner_loss: 0.0214
+Step 1540 Pre-Adapt | Inner_loss_I: 0.0338 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0297 | Inner_loss: 0.0646
+Step 1540 Post-Adapt | Inner_loss_I: 0.0142 | Inner_loss_B: 0.0018 | Inner_loss_F: 0.0040 | Inner_loss: 0.0200
+Step 1560 Pre-Adapt | Inner_loss_I: 0.0335 | Inner_loss_B: 0.0011 | Inner_loss_F: 0.0319 | Inner_loss: 0.0665
+Step 1560 Post-Adapt | Inner_loss_I: 0.0137 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0038 | Inner_loss: 0.0189
+Step 1580 Pre-Adapt | Inner_loss_I: 0.0339 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0259 | Inner_loss: 0.0608
+Step 1580 Post-Adapt | Inner_loss_I: 0.0139 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0034 | Inner_loss: 0.0187
+Model saved
+Step 1600 Pre-Adapt | Inner_loss_I: 0.0321 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0236 | Inner_loss: 0.0564
+Step 1600 Post-Adapt | Inner_loss_I: 0.0120 | Inner_loss_B: 0.0015 | Inner_loss_F: 0.0034 | Inner_loss: 0.0169
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0344 |Inner_loss_B: 0.0008 | Inner_loss_F: 0.0275 | Inner_loss: 0.0626 | NRMSE: 0.4294
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0319 |Inner_loss_B: 0.0004 | Inner_loss_F: 0.0268 | Inner_loss: 0.0592 | NRMSE: 0.4180
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0351 |Inner_loss_B: 0.0008 | Inner_loss_F: 0.1322 | Inner_loss: 0.1681 | NRMSE: 0.4258
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0385 |Inner_loss_B: 0.0023 | Inner_loss_F: 0.0790 | Inner_loss: 0.1198 | NRMSE: 0.4630
+Step 1620 Pre-Adapt | Inner_loss_I: 0.0336 | Inner_loss_B: 0.0005 | Inner_loss_F: 0.0269 | Inner_loss: 0.0610
+Step 1620 Post-Adapt | Inner_loss_I: 0.0133 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0052 | Inner_loss: 0.0197
+Step 1640 Pre-Adapt | Inner_loss_I: 0.0347 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0287 | Inner_loss: 0.0640
+Step 1640 Post-Adapt | Inner_loss_I: 0.0146 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0049 | Inner_loss: 0.0210
+Step 1660 Pre-Adapt | Inner_loss_I: 0.0317 | Inner_loss_B: 0.0006 | Inner_loss_F: 0.0284 | Inner_loss: 0.0607
+Step 1660 Post-Adapt | Inner_loss_I: 0.0126 | Inner_loss_B: 0.0013 | Inner_loss_F: 0.0038 | Inner_loss: 0.0177
+Step 1680 Pre-Adapt | Inner_loss_I: 0.0342 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0224 | Inner_loss: 0.0573
+Step 1680 Post-Adapt | Inner_loss_I: 0.0147 | Inner_loss_B: 0.0013 | Inner_loss_F: 0.0041 | Inner_loss: 0.0202
+Model saved
+Step 1700 Pre-Adapt | Inner_loss_I: 0.0334 | Inner_loss_B: 0.0002 | Inner_loss_F: 0.0300 | Inner_loss: 0.0636
+Step 1700 Post-Adapt | Inner_loss_I: 0.0134 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0035 | Inner_loss: 0.0183
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0323 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0289 | Inner_loss: 0.0614 | NRMSE: 0.4428
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0295 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0274 | Inner_loss: 0.0572 | NRMSE: 0.4201
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0343 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.1340 | Inner_loss: 0.1686 | NRMSE: 0.4396
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0367 |Inner_loss_B: 0.0023 | Inner_loss_F: 0.0778 | Inner_loss: 0.1168 | NRMSE: 0.4704
+Step 1720 Pre-Adapt | Inner_loss_I: 0.0324 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0225 | Inner_loss: 0.0556
+Step 1720 Post-Adapt | Inner_loss_I: 0.0130 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0036 | Inner_loss: 0.0176
+Step 1740 Pre-Adapt | Inner_loss_I: 0.0326 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0332 | Inner_loss: 0.0667
+Step 1740 Post-Adapt | Inner_loss_I: 0.0128 | Inner_loss_B: 0.0015 | Inner_loss_F: 0.0031 | Inner_loss: 0.0175
+Step 1760 Pre-Adapt | Inner_loss_I: 0.0311 | Inner_loss_B: 0.0006 | Inner_loss_F: 0.0270 | Inner_loss: 0.0587
+Step 1760 Post-Adapt | Inner_loss_I: 0.0124 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0036 | Inner_loss: 0.0173
+Step 1780 Pre-Adapt | Inner_loss_I: 0.0348 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0291 | Inner_loss: 0.0647
+Step 1780 Post-Adapt | Inner_loss_I: 0.0140 | Inner_loss_B: 0.0013 | Inner_loss_F: 0.0046 | Inner_loss: 0.0199
+Model saved
+Step 1800 Pre-Adapt | Inner_loss_I: 0.0360 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0299 | Inner_loss: 0.0662
+Step 1800 Post-Adapt | Inner_loss_I: 0.0150 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0038 | Inner_loss: 0.0200
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0377 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0262 | Inner_loss: 0.0642 | NRMSE: 0.4547
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0336 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0258 | Inner_loss: 0.0597 | NRMSE: 0.4330
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0347 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.1048 | Inner_loss: 0.1398 | NRMSE: 0.4496
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0393 |Inner_loss_B: 0.0014 | Inner_loss_F: 0.0716 | Inner_loss: 0.1124 | NRMSE: 0.4631
+Step 1820 Pre-Adapt | Inner_loss_I: 0.0326 | Inner_loss_B: 0.0001 | Inner_loss_F: 0.0320 | Inner_loss: 0.0646
+Step 1820 Post-Adapt | Inner_loss_I: 0.0128 | Inner_loss_B: 0.0011 | Inner_loss_F: 0.0038 | Inner_loss: 0.0176
+Step 1840 Pre-Adapt | Inner_loss_I: 0.0323 | Inner_loss_B: 0.0005 | Inner_loss_F: 0.0291 | Inner_loss: 0.0619
+Step 1840 Post-Adapt | Inner_loss_I: 0.0131 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0051 | Inner_loss: 0.0192
+Step 1860 Pre-Adapt | Inner_loss_I: 0.0312 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0310 | Inner_loss: 0.0634
+Step 1860 Post-Adapt | Inner_loss_I: 0.0130 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0047 | Inner_loss: 0.0190
+Step 1880 Pre-Adapt | Inner_loss_I: 0.0330 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0265 | Inner_loss: 0.0597
+Step 1880 Post-Adapt | Inner_loss_I: 0.0125 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0028 | Inner_loss: 0.0163
+Model saved
+Step 1900 Pre-Adapt | Inner_loss_I: 0.0338 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0364 | Inner_loss: 0.0709
+Step 1900 Post-Adapt | Inner_loss_I: 0.0142 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0035 | Inner_loss: 0.0191
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0352 |Inner_loss_B: 0.0007 | Inner_loss_F: 0.0277 | Inner_loss: 0.0636 | NRMSE: 0.4318
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0324 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.0263 | Inner_loss: 0.0589 | NRMSE: 0.4167
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0340 |Inner_loss_B: 0.0007 | Inner_loss_F: 0.1262 | Inner_loss: 0.1609 | NRMSE: 0.4276
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0373 |Inner_loss_B: 0.0017 | Inner_loss_F: 0.0800 | Inner_loss: 0.1190 | NRMSE: 0.4607
+Step 1920 Pre-Adapt | Inner_loss_I: 0.0295 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0263 | Inner_loss: 0.0570
+Step 1920 Post-Adapt | Inner_loss_I: 0.0118 | Inner_loss_B: 0.0016 | Inner_loss_F: 0.0040 | Inner_loss: 0.0174
+Step 1940 Pre-Adapt | Inner_loss_I: 0.0334 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0208 | Inner_loss: 0.0546
+Step 1940 Post-Adapt | Inner_loss_I: 0.0119 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0036 | Inner_loss: 0.0169
+Step 1960 Pre-Adapt | Inner_loss_I: 0.0331 | Inner_loss_B: 0.0005 | Inner_loss_F: 0.0309 | Inner_loss: 0.0645
+Step 1960 Post-Adapt | Inner_loss_I: 0.0136 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0047 | Inner_loss: 0.0196
+Step 1980 Pre-Adapt | Inner_loss_I: 0.0362 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0263 | Inner_loss: 0.0627
+Step 1980 Post-Adapt | Inner_loss_I: 0.0143 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0036 | Inner_loss: 0.0193
+Model saved
+Step 2000 Pre-Adapt | Inner_loss_I: 0.0311 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0251 | Inner_loss: 0.0564
+Step 2000 Post-Adapt | Inner_loss_I: 0.0117 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0043 | Inner_loss: 0.0172
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0333 |Inner_loss_B: 0.0004 | Inner_loss_F: 0.0285 | Inner_loss: 0.0622 | NRMSE: 0.4485
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0315 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.0277 | Inner_loss: 0.0594 | NRMSE: 0.4391
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0334 |Inner_loss_B: 0.0004 | Inner_loss_F: 0.1266 | Inner_loss: 0.1604 | NRMSE: 0.4454
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0384 |Inner_loss_B: 0.0014 | Inner_loss_F: 0.0757 | Inner_loss: 0.1156 | NRMSE: 0.4686
+Step 2020 Pre-Adapt | Inner_loss_I: 0.0317 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0357 | Inner_loss: 0.0677
+Step 2020 Post-Adapt | Inner_loss_I: 0.0136 | Inner_loss_B: 0.0014 | Inner_loss_F: 0.0037 | Inner_loss: 0.0187
+Step 2040 Pre-Adapt | Inner_loss_I: 0.0320 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0215 | Inner_loss: 0.0544
+Step 2040 Post-Adapt | Inner_loss_I: 0.0126 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0033 | Inner_loss: 0.0169
+Step 2060 Pre-Adapt | Inner_loss_I: 0.0339 | Inner_loss_B: 0.0002 | Inner_loss_F: 0.0277 | Inner_loss: 0.0617
+Step 2060 Post-Adapt | Inner_loss_I: 0.0133 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0041 | Inner_loss: 0.0185
+Step 2080 Pre-Adapt | Inner_loss_I: 0.0344 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0303 | Inner_loss: 0.0650
+Step 2080 Post-Adapt | Inner_loss_I: 0.0145 | Inner_loss_B: 0.0015 | Inner_loss_F: 0.0033 | Inner_loss: 0.0193
+Model saved
+Step 2100 Pre-Adapt | Inner_loss_I: 0.0307 | Inner_loss_B: 0.0002 | Inner_loss_F: 0.0371 | Inner_loss: 0.0680
+Step 2100 Post-Adapt | Inner_loss_I: 0.0131 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0043 | Inner_loss: 0.0186
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0317 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.0305 | Inner_loss: 0.0625 | NRMSE: 0.4142
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0299 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.0291 | Inner_loss: 0.0592 | NRMSE: 0.4060
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0289 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.1370 | Inner_loss: 0.1662 | NRMSE: 0.4107
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0329 |Inner_loss_B: 0.0018 | Inner_loss_F: 0.0801 | Inner_loss: 0.1148 | NRMSE: 0.4532
+Step 2120 Pre-Adapt | Inner_loss_I: 0.0303 | Inner_loss_B: 0.0004 | Inner_loss_F: 0.0275 | Inner_loss: 0.0581
+Step 2120 Post-Adapt | Inner_loss_I: 0.0131 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0033 | Inner_loss: 0.0176
+Step 2140 Pre-Adapt | Inner_loss_I: 0.0293 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0301 | Inner_loss: 0.0596
+Step 2140 Post-Adapt | Inner_loss_I: 0.0117 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0037 | Inner_loss: 0.0166
+Step 2160 Pre-Adapt | Inner_loss_I: 0.0333 | Inner_loss_B: 0.0006 | Inner_loss_F: 0.0258 | Inner_loss: 0.0597
+Step 2160 Post-Adapt | Inner_loss_I: 0.0132 | Inner_loss_B: 0.0011 | Inner_loss_F: 0.0034 | Inner_loss: 0.0177
+Step 2180 Pre-Adapt | Inner_loss_I: 0.0328 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0214 | Inner_loss: 0.0545
+Step 2180 Post-Adapt | Inner_loss_I: 0.0130 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0040 | Inner_loss: 0.0180
+Model saved
+Step 2200 Pre-Adapt | Inner_loss_I: 0.0322 | Inner_loss_B: 0.0006 | Inner_loss_F: 0.0261 | Inner_loss: 0.0589
+Step 2200 Post-Adapt | Inner_loss_I: 0.0131 | Inner_loss_B: 0.0008 | Inner_loss_F: 0.0039 | Inner_loss: 0.0179
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0339 |Inner_loss_B: 0.0006 | Inner_loss_F: 0.0292 | Inner_loss: 0.0637 | NRMSE: 0.4296
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0317 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.0276 | Inner_loss: 0.0595 | NRMSE: 0.4244
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0337 |Inner_loss_B: 0.0005 | Inner_loss_F: 0.1208 | Inner_loss: 0.1550 | NRMSE: 0.4266
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0383 |Inner_loss_B: 0.0018 | Inner_loss_F: 0.0776 | Inner_loss: 0.1176 | NRMSE: 0.4645
+Step 2220 Pre-Adapt | Inner_loss_I: 0.0303 | Inner_loss_B: 0.0004 | Inner_loss_F: 0.0247 | Inner_loss: 0.0553
+Step 2220 Post-Adapt | Inner_loss_I: 0.0116 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0034 | Inner_loss: 0.0159
+Step 2240 Pre-Adapt | Inner_loss_I: 0.0318 | Inner_loss_B: 0.0004 | Inner_loss_F: 0.0285 | Inner_loss: 0.0607
+Step 2240 Post-Adapt | Inner_loss_I: 0.0139 | Inner_loss_B: 0.0013 | Inner_loss_F: 0.0036 | Inner_loss: 0.0189
+Step 2260 Pre-Adapt | Inner_loss_I: 0.0317 | Inner_loss_B: 0.0001 | Inner_loss_F: 0.0254 | Inner_loss: 0.0573
+Step 2260 Post-Adapt | Inner_loss_I: 0.0127 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0043 | Inner_loss: 0.0180
+Step 2280 Pre-Adapt | Inner_loss_I: 0.0329 | Inner_loss_B: 0.0001 | Inner_loss_F: 0.0355 | Inner_loss: 0.0684
+Step 2280 Post-Adapt | Inner_loss_I: 0.0137 | Inner_loss_B: 0.0011 | Inner_loss_F: 0.0034 | Inner_loss: 0.0182
+Model saved
+Step 2300 Pre-Adapt | Inner_loss_I: 0.0305 | Inner_loss_B: 0.0001 | Inner_loss_F: 0.0302 | Inner_loss: 0.0608
+Step 2300 Post-Adapt | Inner_loss_I: 0.0125 | Inner_loss_B: 0.0008 | Inner_loss_F: 0.0037 | Inner_loss: 0.0171
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0292 |Inner_loss_B: 0.0001 | Inner_loss_F: 0.0296 | Inner_loss: 0.0589 | NRMSE: 0.4251
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0282 |Inner_loss_B: 0.0001 | Inner_loss_F: 0.0276 | Inner_loss: 0.0559 | NRMSE: 0.4140
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0301 |Inner_loss_B: 0.0001 | Inner_loss_F: 0.1269 | Inner_loss: 0.1571 | NRMSE: 0.4226
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0365 |Inner_loss_B: 0.0011 | Inner_loss_F: 0.0815 | Inner_loss: 0.1191 | NRMSE: 0.4579
+Step 2320 Pre-Adapt | Inner_loss_I: 0.0330 | Inner_loss_B: 0.0000 | Inner_loss_F: 0.0330 | Inner_loss: 0.0661
+Step 2320 Post-Adapt | Inner_loss_I: 0.0137 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0032 | Inner_loss: 0.0181
+Step 2340 Pre-Adapt | Inner_loss_I: 0.0322 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0258 | Inner_loss: 0.0586
+Step 2340 Post-Adapt | Inner_loss_I: 0.0136 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0047 | Inner_loss: 0.0192
+Step 2360 Pre-Adapt | Inner_loss_I: 0.0312 | Inner_loss_B: 0.0005 | Inner_loss_F: 0.0287 | Inner_loss: 0.0604
+Step 2360 Post-Adapt | Inner_loss_I: 0.0130 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0042 | Inner_loss: 0.0181
+Step 2380 Pre-Adapt | Inner_loss_I: 0.0354 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0342 | Inner_loss: 0.0698
+Step 2380 Post-Adapt | Inner_loss_I: 0.0140 | Inner_loss_B: 0.0011 | Inner_loss_F: 0.0041 | Inner_loss: 0.0192
+Model saved
+Step 2400 Pre-Adapt | Inner_loss_I: 0.0324 | Inner_loss_B: 0.0005 | Inner_loss_F: 0.0273 | Inner_loss: 0.0602
+Step 2400 Post-Adapt | Inner_loss_I: 0.0138 | Inner_loss_B: 0.0013 | Inner_loss_F: 0.0041 | Inner_loss: 0.0192
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0318 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0279 | Inner_loss: 0.0600 | NRMSE: 0.4456
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0294 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.0266 | Inner_loss: 0.0563 | NRMSE: 0.4302
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0304 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.1444 | Inner_loss: 0.1751 | NRMSE: 0.4425
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0336 |Inner_loss_B: 0.0021 | Inner_loss_F: 0.0786 | Inner_loss: 0.1142 | NRMSE: 0.4766
+Step 2420 Pre-Adapt | Inner_loss_I: 0.0319 | Inner_loss_B: 0.0004 | Inner_loss_F: 0.0271 | Inner_loss: 0.0594
+Step 2420 Post-Adapt | Inner_loss_I: 0.0141 | Inner_loss_B: 0.0009 | Inner_loss_F: 0.0049 | Inner_loss: 0.0199
+Step 2440 Pre-Adapt | Inner_loss_I: 0.0305 | Inner_loss_B: 0.0004 | Inner_loss_F: 0.0264 | Inner_loss: 0.0574
+Step 2440 Post-Adapt | Inner_loss_I: 0.0125 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0037 | Inner_loss: 0.0172
+Step 2460 Pre-Adapt | Inner_loss_I: 0.0336 | Inner_loss_B: 0.0002 | Inner_loss_F: 0.0236 | Inner_loss: 0.0574
+Step 2460 Post-Adapt | Inner_loss_I: 0.0134 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0033 | Inner_loss: 0.0177
+Step 2480 Pre-Adapt | Inner_loss_I: 0.0303 | Inner_loss_B: 0.0002 | Inner_loss_F: 0.0323 | Inner_loss: 0.0628
+Step 2480 Post-Adapt | Inner_loss_I: 0.0130 | Inner_loss_B: 0.0011 | Inner_loss_F: 0.0039 | Inner_loss: 0.0180
+Model saved
+Step 2500 Pre-Adapt | Inner_loss_I: 0.0332 | Inner_loss_B: 0.0005 | Inner_loss_F: 0.0269 | Inner_loss: 0.0605
+Step 2500 Post-Adapt | Inner_loss_I: 0.0137 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0050 | Inner_loss: 0.0200
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0347 |Inner_loss_B: 0.0004 | Inner_loss_F: 0.0297 | Inner_loss: 0.0648 | NRMSE: 0.4367
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0319 |Inner_loss_B: 0.0001 | Inner_loss_F: 0.0280 | Inner_loss: 0.0600 | NRMSE: 0.4281
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0360 |Inner_loss_B: 0.0004 | Inner_loss_F: 0.1179 | Inner_loss: 0.1543 | NRMSE: 0.4331
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0364 |Inner_loss_B: 0.0013 | Inner_loss_F: 0.0739 | Inner_loss: 0.1116 | NRMSE: 0.4613
+Step 2520 Pre-Adapt | Inner_loss_I: 0.0333 | Inner_loss_B: 0.0001 | Inner_loss_F: 0.0343 | Inner_loss: 0.0676
+Step 2520 Post-Adapt | Inner_loss_I: 0.0141 | Inner_loss_B: 0.0013 | Inner_loss_F: 0.0036 | Inner_loss: 0.0190
+Step 2540 Pre-Adapt | Inner_loss_I: 0.0325 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0220 | Inner_loss: 0.0548
+Step 2540 Post-Adapt | Inner_loss_I: 0.0128 | Inner_loss_B: 0.0008 | Inner_loss_F: 0.0033 | Inner_loss: 0.0170
+Step 2560 Pre-Adapt | Inner_loss_I: 0.0310 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0281 | Inner_loss: 0.0594
+Step 2560 Post-Adapt | Inner_loss_I: 0.0135 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0034 | Inner_loss: 0.0179
+Step 2580 Pre-Adapt | Inner_loss_I: 0.0284 | Inner_loss_B: 0.0005 | Inner_loss_F: 0.0289 | Inner_loss: 0.0578
+Step 2580 Post-Adapt | Inner_loss_I: 0.0118 | Inner_loss_B: 0.0012 | Inner_loss_F: 0.0044 | Inner_loss: 0.0174
+Model saved
+Step 2600 Pre-Adapt | Inner_loss_I: 0.0347 | Inner_loss_B: 0.0002 | Inner_loss_F: 0.0262 | Inner_loss: 0.0611
+Step 2600 Post-Adapt | Inner_loss_I: 0.0155 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0040 | Inner_loss: 0.0205
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0333 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.0275 | Inner_loss: 0.0610 | NRMSE: 0.4359
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0306 |Inner_loss_B: 0.0001 | Inner_loss_F: 0.0269 | Inner_loss: 0.0576 | NRMSE: 0.4213
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0341 |Inner_loss_B: 0.0002 | Inner_loss_F: 0.1496 | Inner_loss: 0.1839 | NRMSE: 0.4320
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0392 |Inner_loss_B: 0.0014 | Inner_loss_F: 0.0786 | Inner_loss: 0.1192 | NRMSE: 0.4635
+Step 2620 Pre-Adapt | Inner_loss_I: 0.0321 | Inner_loss_B: 0.0001 | Inner_loss_F: 0.0258 | Inner_loss: 0.0581
+Step 2620 Post-Adapt | Inner_loss_I: 0.0129 | Inner_loss_B: 0.0007 | Inner_loss_F: 0.0033 | Inner_loss: 0.0169
+Step 2640 Pre-Adapt | Inner_loss_I: 0.0318 | Inner_loss_B: 0.0006 | Inner_loss_F: 0.0313 | Inner_loss: 0.0637
+Step 2640 Post-Adapt | Inner_loss_I: 0.0134 | Inner_loss_B: 0.0011 | Inner_loss_F: 0.0034 | Inner_loss: 0.0179
+Step 2660 Pre-Adapt | Inner_loss_I: 0.0305 | Inner_loss_B: 0.0006 | Inner_loss_F: 0.0285 | Inner_loss: 0.0597
+Step 2660 Post-Adapt | Inner_loss_I: 0.0129 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0038 | Inner_loss: 0.0176
+Step 2680 Pre-Adapt | Inner_loss_I: 0.0351 | Inner_loss_B: 0.0001 | Inner_loss_F: 0.0263 | Inner_loss: 0.0615
+Step 2680 Post-Adapt | Inner_loss_I: 0.0141 | Inner_loss_B: 0.0008 | Inner_loss_F: 0.0036 | Inner_loss: 0.0185
+Model saved
+Step 2700 Pre-Adapt | Inner_loss_I: 0.0331 | Inner_loss_B: 0.0003 | Inner_loss_F: 0.0285 | Inner_loss: 0.0618
+Step 2700 Post-Adapt | Inner_loss_I: 0.0144 | Inner_loss_B: 0.0008 | Inner_loss_F: 0.0040 | Inner_loss: 0.0193
+Validation Pre-adaptation (0.019)| Inner_loss_I: 0.0332 |Inner_loss_B: 0.0004 | Inner_loss_F: 0.0266 | Inner_loss: 0.0602 | NRMSE: 0.4359
+Validation Post-adaptation (0.019)| Inner_loss_I: 0.0300 |Inner_loss_B: 0.0003 | Inner_loss_F: 0.0264 | Inner_loss: 0.0566 | NRMSE: 0.4191
+validation OOD Pre-Adaptation (0.001)| Inner_loss_I: 0.0345 |Inner_loss_B: 0.0004 | Inner_loss_F: 0.1156 | Inner_loss: 0.1505 | NRMSE: 0.4317
+validation OOD Post-Adaptation (0.001)| Inner_loss_I: 0.0388 |Inner_loss_B: 0.0016 | Inner_loss_F: 0.0811 | Inner_loss: 0.1215 | NRMSE: 0.4653
+Step 2720 Pre-Adapt | Inner_loss_I: 0.0303 | Inner_loss_B: 0.0006 | Inner_loss_F: 0.0334 | Inner_loss: 0.0643
+Step 2720 Post-Adapt | Inner_loss_I: 0.0127 | Inner_loss_B: 0.0010 | Inner_loss_F: 0.0045 | Inner_loss: 0.0182
